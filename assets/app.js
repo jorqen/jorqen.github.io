@@ -749,7 +749,7 @@ function renderExperience(content) {
     const companyIcon = document.createElement("img");
     companyIcon.className = "company-icon";
     companyIcon.alt = `${item.company} icon`;
-    setIconWithFallback(companyIcon, item.companyIcon, getFaviconUrl(item.companyUrl));
+    setIconWithFallback(companyIcon, getFaviconUrl(item.companyUrl), item.companyIcon);
 
     let companyLink = null;
     if (item.companyUrl) {
