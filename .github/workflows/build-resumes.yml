@@ -1,15 +1,25 @@
-name: Build Resume Formats
+name: Build And Deploy Pages
 
 on:
   workflow_dispatch:
   push:
+    branches:
+      - master
     paths:
+      - "index.html"
+      - "assets/**"
       - "resume/**/resume.md"
       - "scripts/build_resume_formats.sh"
       - ".github/workflows/build-resumes.yml"
 
 permissions:
-  contents: write
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
 
 jobs:
   build:
@@ -18,16 +28,34 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v5
+
       - name: Install dependencies
         run: |
           sudo apt-get update
           sudo apt-get install -y pandoc texlive-xetex texlive-fonts-recommended fonts-dejavu-core
 
       - name: Generate resume files
-        run: ./scripts/build_resume_formats.sh
+        run: |
+          mkdir -p dist
+          cp index.html dist/
+          cp -R assets dist/assets
+          OUTPUT_ROOT="${GITHUB_WORKSPACE}/dist/resume" ./scripts/build_resume_formats.sh
+          touch dist/.nojekyll
 
-      - name: Commit generated files
-        uses: stefanzweifel/git-auto-commit-action@v5
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
         with:
-          commit_message: "chore: regenerate resume formats"
-          file_pattern: "resume/**/*.txt resume/**/*.docx resume/**/*.pdf"
+          path: dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

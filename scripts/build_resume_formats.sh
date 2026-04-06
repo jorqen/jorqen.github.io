@@ -4,6 +4,7 @@ set -euo pipefail
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 PDF_ENGINE="${PDF_ENGINE:-xelatex}"
 MAIN_FONT="${MAIN_FONT:-}"
+OUTPUT_ROOT="${OUTPUT_ROOT:-${ROOT_DIR}/resume}"
 
 require_binary() {
   local bin_name="$1"
@@ -17,12 +18,14 @@ build_resume() {
   local lang="$1"
   local title="$2"
   local source_file="${ROOT_DIR}/resume/${lang}/resume.md"
-  local output_dir="${ROOT_DIR}/resume/${lang}"
+  local output_dir="${OUTPUT_ROOT}/${lang}"
 
   if [[ ! -f "$source_file" ]]; then
     echo "Missing source file: $source_file" >&2
     exit 1
   fi
+
+  mkdir -p "$output_dir"
 
   pandoc "$source_file" --from=gfm --to=plain -o "${output_dir}/resume.txt"
   pandoc "$source_file" --from=gfm -o "${output_dir}/resume.docx"
