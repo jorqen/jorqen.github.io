@@ -589,16 +589,22 @@ function setIconWithFallback(imgElement, remoteIconUrl, fallbackIconUrl) {
     return;
   }
 
-  if (!remoteIconUrl) {
+  const applyFallback = () => {
+    imgElement.dataset.iconSource = "fallback";
     imgElement.src = fallbackIconUrl;
+  };
+
+  if (!remoteIconUrl) {
+    applyFallback();
     return;
   }
 
   imgElement.onerror = () => {
     imgElement.onerror = null;
-    imgElement.src = fallbackIconUrl;
+    applyFallback();
   };
 
+  imgElement.dataset.iconSource = "remote";
   imgElement.src = remoteIconUrl;
 }
 
