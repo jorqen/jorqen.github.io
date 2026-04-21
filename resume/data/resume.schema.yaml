@@ -1,0 +1,489 @@
+"$schema": "http://json-schema.org/draft-07/schema#"
+"$id": "https://jorqen.github.io/resume/data/resume.schema.yaml"
+title: "Jorqen Resume Source"
+description: "JSON Schema for resume/data/resume.yaml. Runtime validation still checks cross-field rules such as sorting and generated fields."
+type: "object"
+required:
+  - "schema"
+  - "defaultLanguage"
+  - "languages"
+  - "contacts"
+  - "site"
+  - "resumeLabels"
+  - "experience"
+  - "education"
+  - "strengths"
+  - "skills"
+  - "preferences"
+  - "gallery"
+additionalProperties: false
+properties:
+  schema:
+    const: "jorqen.resume.v1"
+  defaultLanguage:
+    const: "en"
+  languages:
+    type: "array"
+    minItems: 2
+    maxItems: 2
+    items:
+      - const: "en"
+      - const: "ru"
+    additionalItems: false
+  contacts:
+    type: "object"
+    required:
+      - "website"
+      - "linkedin"
+      - "github"
+      - "telegram"
+    additionalProperties: false
+    properties:
+      website:
+        "$ref": "#/definitions/contact"
+      linkedin:
+        "$ref": "#/definitions/contact"
+      github:
+        "$ref": "#/definitions/contact"
+      telegram:
+        "$ref": "#/definitions/contact"
+  site:
+    "$ref": "#/definitions/site"
+  resumeLabels:
+    type: "object"
+    required:
+      - "achievements"
+      - "stack"
+      - "present"
+      - "expectedGraduation"
+    additionalProperties: false
+    properties:
+      achievements:
+        "$ref": "#/definitions/localizedString"
+      stack:
+        "$ref": "#/definitions/localizedString"
+      present:
+        "$ref": "#/definitions/localizedString"
+      expectedGraduation:
+        "$ref": "#/definitions/localizedString"
+  experience:
+    "$ref": "#/definitions/experienceSection"
+  education:
+    "$ref": "#/definitions/educationSection"
+  strengths:
+    "$ref": "#/definitions/strengthsSection"
+  skills:
+    "$ref": "#/definitions/skillsSection"
+  preferences:
+    "$ref": "#/definitions/preferencesSection"
+  gallery:
+    "$ref": "#/definitions/gallerySection"
+definitions:
+  stringValue:
+    type: "string"
+    minLength: 1
+  localizedString:
+    oneOf:
+      - "$ref": "#/definitions/stringValue"
+      - "$ref": "#/definitions/localizedStringMap"
+  localizedStringMap:
+    type: "object"
+    required:
+      - "en"
+      - "ru"
+    additionalProperties: false
+    properties:
+      en:
+        "$ref": "#/definitions/stringValue"
+      ru:
+        "$ref": "#/definitions/stringValue"
+  contact:
+    type: "object"
+    required:
+      - "label"
+      - "text"
+      - "url"
+    additionalProperties: false
+    properties:
+      label:
+        "$ref": "#/definitions/localizedString"
+      text:
+        "$ref": "#/definitions/stringValue"
+      url:
+        type: "string"
+        minLength: 1
+        format: "uri"
+  site:
+    type: "object"
+    required:
+      - "meta"
+      - "brand"
+      - "nav"
+      - "langSwitcherLabel"
+      - "theme"
+      - "hero"
+      - "resumeDownloads"
+      - "lightbox"
+      - "footer"
+    additionalProperties: false
+    properties:
+      meta:
+        type: "object"
+        required:
+          - "title"
+          - "description"
+        additionalProperties: false
+        properties:
+          title:
+            "$ref": "#/definitions/localizedString"
+          description:
+            "$ref": "#/definitions/localizedString"
+      brand:
+        "$ref": "#/definitions/localizedString"
+      nav:
+        type: "object"
+        required:
+          - "resume"
+          - "experience"
+          - "education"
+          - "strengths"
+          - "skills"
+        additionalProperties: false
+        properties:
+          resume:
+            "$ref": "#/definitions/localizedString"
+          experience:
+            "$ref": "#/definitions/localizedString"
+          education:
+            "$ref": "#/definitions/localizedString"
+          strengths:
+            "$ref": "#/definitions/localizedString"
+          skills:
+            "$ref": "#/definitions/localizedString"
+      langSwitcherLabel:
+        "$ref": "#/definitions/localizedString"
+      theme:
+        type: "object"
+        required:
+          - "toDark"
+          - "toLight"
+          - "switcherLabel"
+        additionalProperties: false
+        properties:
+          toDark:
+            "$ref": "#/definitions/localizedString"
+          toLight:
+            "$ref": "#/definitions/localizedString"
+          switcherLabel:
+            "$ref": "#/definitions/localizedString"
+      hero:
+        "$ref": "#/definitions/hero"
+      resumeDownloads:
+        "$ref": "#/definitions/resumeDownloads"
+      lightbox:
+        "$ref": "#/definitions/lightbox"
+      footer:
+        "$ref": "#/definitions/localizedString"
+  hero:
+    type: "object"
+    required:
+      - "kicker"
+      - "name"
+      - "role"
+      - "summary"
+      - "photo"
+      - "links"
+      - "facts"
+    additionalProperties: false
+    properties:
+      kicker:
+        "$ref": "#/definitions/stringValue"
+      name:
+        "$ref": "#/definitions/localizedString"
+      role:
+        "$ref": "#/definitions/localizedString"
+      summary:
+        "$ref": "#/definitions/localizedString"
+      photo:
+        "$ref": "#/definitions/imageAsset"
+      links:
+        type: "object"
+        required:
+          - "linkedin"
+          - "github"
+          - "telegram"
+        additionalProperties: false
+        properties:
+          linkedin:
+            "$ref": "#/definitions/stringValue"
+          github:
+            "$ref": "#/definitions/stringValue"
+          telegram:
+            "$ref": "#/definitions/stringValue"
+      facts:
+        type: "array"
+        minItems: 1
+        items:
+          "$ref": "#/definitions/fact"
+  imageAsset:
+    type: "object"
+    required:
+      - "src"
+      - "caption"
+      - "filter"
+    additionalProperties: false
+    properties:
+      src:
+        "$ref": "#/definitions/stringValue"
+      caption:
+        "$ref": "#/definitions/localizedString"
+      position:
+        "$ref": "#/definitions/stringValue"
+      filter:
+        "$ref": "#/definitions/stringValue"
+  fact:
+    type: "object"
+    required:
+      - "icon"
+      - "label"
+      - "value"
+    additionalProperties: false
+    properties:
+      icon:
+        "$ref": "#/definitions/stringValue"
+      label:
+        "$ref": "#/definitions/localizedString"
+      value:
+        "$ref": "#/definitions/localizedString"
+  resumeDownloads:
+    type: "object"
+    required:
+      - "title"
+      - "labels"
+    additionalProperties: false
+    properties:
+      title:
+        "$ref": "#/definitions/localizedString"
+      labels:
+        type: "object"
+        required:
+          - "pdf"
+          - "docx"
+          - "txt"
+        additionalProperties: false
+        properties:
+          pdf:
+            "$ref": "#/definitions/localizedString"
+          docx:
+            "$ref": "#/definitions/localizedString"
+          txt:
+            "$ref": "#/definitions/localizedString"
+  lightbox:
+    type: "object"
+    required:
+      - "openPhoto"
+      - "close"
+      - "previous"
+      - "next"
+    additionalProperties: false
+    properties:
+      openPhoto:
+        "$ref": "#/definitions/localizedString"
+      close:
+        "$ref": "#/definitions/localizedString"
+      previous:
+        "$ref": "#/definitions/localizedString"
+      next:
+        "$ref": "#/definitions/localizedString"
+  experienceSection:
+    type: "object"
+    required:
+      - "title"
+      - "companySiteLabel"
+      - "items"
+    additionalProperties: false
+    properties:
+      title:
+        "$ref": "#/definitions/localizedString"
+      companySiteLabel:
+        "$ref": "#/definitions/localizedString"
+      items:
+        type: "array"
+        minItems: 1
+        items:
+          "$ref": "#/definitions/experienceItem"
+  experienceItem:
+    type: "object"
+    required:
+      - "company"
+      - "role"
+      - "startDate"
+      - "location"
+      - "summary"
+      - "highlights"
+      - "stack"
+    additionalProperties: false
+    not:
+      anyOf:
+        - required:
+            - "id"
+        - required:
+            - "period"
+    properties:
+      company:
+        "$ref": "#/definitions/localizedString"
+      role:
+        "$ref": "#/definitions/stringValue"
+      startDate:
+        "$ref": "#/definitions/yearMonth"
+      endDate:
+        "$ref": "#/definitions/yearMonth"
+      location:
+        "$ref": "#/definitions/localizedString"
+      summary:
+        "$ref": "#/definitions/localizedString"
+      highlights:
+        type: "array"
+        minItems: 1
+        items:
+          "$ref": "#/definitions/localizedString"
+      stack:
+        "$ref": "#/definitions/stringList"
+      url:
+        type: "string"
+        minLength: 1
+        format: "uri"
+      icon:
+        "$ref": "#/definitions/stringValue"
+      iconDark:
+        "$ref": "#/definitions/stringValue"
+  educationSection:
+    type: "object"
+    required:
+      - "title"
+      - "subtitle"
+      - "items"
+    additionalProperties: false
+    properties:
+      title:
+        "$ref": "#/definitions/localizedString"
+      subtitle:
+        "$ref": "#/definitions/localizedString"
+      items:
+        type: "array"
+        minItems: 1
+        items:
+          "$ref": "#/definitions/educationItem"
+  educationItem:
+    type: "object"
+    required:
+      - "institution"
+      - "degree"
+      - "endDate"
+    additionalProperties: false
+    properties:
+      institution:
+        "$ref": "#/definitions/localizedString"
+      degree:
+        "$ref": "#/definitions/localizedString"
+      startDate:
+        "$ref": "#/definitions/yearOrYearMonth"
+      endDate:
+        "$ref": "#/definitions/yearOrYearMonth"
+      expected:
+        type: "boolean"
+  strengthsSection:
+    type: "object"
+    required:
+      - "title"
+      - "subtitle"
+      - "cards"
+    additionalProperties: false
+    properties:
+      title:
+        "$ref": "#/definitions/localizedString"
+      subtitle:
+        "$ref": "#/definitions/localizedString"
+      cards:
+        type: "array"
+        minItems: 1
+        items:
+          "$ref": "#/definitions/titleBodyCard"
+  titleBodyCard:
+    type: "object"
+    required:
+      - "title"
+      - "body"
+    additionalProperties: false
+    properties:
+      title:
+        "$ref": "#/definitions/localizedString"
+      body:
+        "$ref": "#/definitions/localizedString"
+  skillsSection:
+    type: "object"
+    required:
+      - "title"
+      - "groups"
+    additionalProperties: false
+    properties:
+      title:
+        "$ref": "#/definitions/localizedString"
+      groups:
+        type: "array"
+        minItems: 1
+        items:
+          "$ref": "#/definitions/skillGroup"
+  skillGroup:
+    type: "object"
+    required:
+      - "title"
+      - "items"
+    additionalProperties: false
+    properties:
+      title:
+        "$ref": "#/definitions/localizedString"
+      items:
+        "$ref": "#/definitions/stringList"
+  preferencesSection:
+    type: "object"
+    required:
+      - "title"
+      - "items"
+    additionalProperties: false
+    properties:
+      title:
+        "$ref": "#/definitions/localizedString"
+      items:
+        type: "array"
+        minItems: 1
+        items:
+          "$ref": "#/definitions/localizedString"
+  gallerySection:
+    type: "object"
+    required:
+      - "title"
+      - "subtitle"
+      - "items"
+    additionalProperties: false
+    properties:
+      title:
+        "$ref": "#/definitions/localizedString"
+      subtitle:
+        "$ref": "#/definitions/localizedString"
+      items:
+        type: "array"
+        minItems: 1
+        items:
+          "$ref": "#/definitions/imageAsset"
+  stringList:
+    type: "array"
+    minItems: 1
+    items:
+      "$ref": "#/definitions/stringValue"
+  yearMonth:
+    type: "string"
+    pattern: '^\d{4}-\d{2}$'
+  yearOrYearMonth:
+    type: "string"
+    pattern: '^\d{4}(-\d{2})?$'

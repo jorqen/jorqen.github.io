@@ -1,0 +1,594 @@
+# yaml-language-server: $schema=./resume.schema.yaml
+schema: "jorqen.resume.v1"
+defaultLanguage: "en"
+languages:
+  - "en"
+  - "ru"
+contacts:
+  website:
+    label:
+      en: "Website"
+      ru: "Сайт"
+    text: "jorqen.github.io/jorqen"
+    url: "https://jorqen.github.io"
+  linkedin:
+    label: "LinkedIn"
+    text: "jorqen"
+    url: "https://www.linkedin.com/in/jorqen"
+  github:
+    label: "GitHub"
+    text: "jorqen"
+    url: "https://github.com/jorqen"
+  telegram:
+    label: "Telegram"
+    text: "jorqen"
+    url: "https://t.me/jorqen"
+site:
+  meta:
+    title:
+      en: "Matvey Sizov | Backend Developer / Software Engineer"
+      ru: "Матвей Сизов | Backend Developer / Software Engineer"
+    description:
+      en: "Matvey Sizov - Backend Developer / Software Engineer. Go, distributed systems, low-latency backend development, and production reliability in product and platform teams."
+      ru: "Матвей Сизов - Backend Developer / Software Engineer. Go, распределенные системы, backend с низкой задержкой и надежность production в продуктовых и платформенных командах."
+  brand:
+    en: "Matvey Sizov"
+    ru: "Матвей Сизов"
+  nav:
+    resume:
+      en: "Resume"
+      ru: "Резюме"
+    experience:
+      en: "Experience"
+      ru: "Опыт"
+    education:
+      en: "Education"
+      ru: "Образование"
+    strengths:
+      en: "Profile"
+      ru: "Профиль"
+    skills:
+      en: "Stack"
+      ru: "Стек"
+  langSwitcherLabel:
+    en: "Language switcher"
+    ru: "Переключение языка"
+  theme:
+    toDark:
+      en: "Dark theme"
+      ru: "Тёмная тема"
+    toLight:
+      en: "Light theme"
+      ru: "Светлая тема"
+    switcherLabel:
+      en: "Theme switcher"
+      ru: "Переключение темы"
+  hero:
+    kicker: "Backend Developer / Software Engineer"
+    name:
+      en: "Matvey Sizov"
+      ru: "Матвей Сизов"
+    role:
+      en: "More than 4 years in backend development. Golang, Java, distributed systems, product and infrastructure engineering."
+      ru: "Более 4-х лет в backend-разработке. Golang, Java, распределенные системы, продуктовая и инфраструктурная разработка."
+    summary:
+      en: "I started programming in Java in my early teens, entered backend professionally through Java, and then shifted my primary focus to Go because explicit and understandable systems are a better fit for me. Today I work on both infrastructure and product backends, and I am strongest where a team needs someone who can turn ambiguous requirements into a production system with reasonable trade-offs, observability, and reliable delivery."
+      ru: "Я начал программировать на Java еще в раннем подростковом возрасте, вошел в профессию backend-разработчика через Java, а затем перевел основной фокус на Go, потому что мне ближе явные и понятные системы. Сейчас я работаю и с инфраструктурным, и с продуктовым backend, а сильнее всего проявляюсь там, где команде нужен человек, который превращает размытые требования в production-систему с разумными компромиссами, наблюдаемостью и надежной поставкой решений."
+    photo:
+      src: "assets/photos/matvey-studio.jpg"
+      caption:
+        en: "Studio portrait"
+        ru: "Студийный портрет"
+      position: "center 18%"
+      filter: "brightness(0.94) contrast(1.04) saturate(0.9)"
+    links:
+      linkedin: "LinkedIn"
+      github: "GitHub"
+      telegram: "Telegram"
+    facts:
+      -
+        icon: "location"
+        label:
+          en: "Location"
+          ru: "Локация"
+        value:
+          en: "Moscow, Russia"
+          ru: "Москва, Россия"
+      -
+        icon: "briefcase"
+        label:
+          en: "Experience"
+          ru: "Опыт"
+        value:
+          en: "Golang - 4+ years\nJava - 6 months"
+          ru: "Golang - 4+ года\nJava - 6 месяцев"
+      -
+        icon: "layers"
+        label:
+          en: "Primary stack"
+          ru: "Основной стек"
+        value:
+          en: "Go, distributed systems"
+          ru: "Go, распределенные системы"
+      -
+        icon: "star"
+        label:
+          en: "Format"
+          ru: "Формат"
+        value:
+          en: "Remote / relocation"
+          ru: "Удаленно / релокация"
+  resumeDownloads:
+    title:
+      en: "Download resume"
+      ru: "Скачать резюме"
+    labels:
+      pdf:
+        en: "For sharing and printing"
+        ru: "Для отправки и печати"
+      docx:
+        en: "Editable source"
+        ru: "Редактируемый источник"
+      txt:
+        en: "Text version"
+        ru: "Текстовая версия"
+  lightbox:
+    openPhoto:
+      en: "Open photo"
+      ru: "Открыть фото"
+    close:
+      en: "Close photo viewer"
+      ru: "Закрыть просмотр фото"
+    previous:
+      en: "Previous photo"
+      ru: "Предыдущее фото"
+    next:
+      en: "Next photo"
+      ru: "Следующее фото"
+  footer:
+    en: "© {year} Matvey Sizov. Personal website for recruiters and hiring managers."
+    ru: "© {year} Матвей Сизов. Сайт-визитка для рекрутеров и менеджеров по найму."
+resumeLabels:
+  achievements:
+    en: "Achievements"
+    ru: "Достижения"
+  stack:
+    en: "Stack"
+    ru: "Стек"
+  present:
+    en: "Present"
+    ru: "настоящее время"
+  expectedGraduation:
+    en: "Expected graduation"
+    ru: "Ожидаемое окончание"
+experience:
+  title:
+    en: "Experience"
+    ru: "Опыт"
+  companySiteLabel:
+    en: "Company site"
+    ru: "Сайт компании"
+  items:
+    -
+      company:
+        en: "ATOM"
+        ru: "АТОМ"
+      role: "Senior Software Engineer, Communications & Telemetry"
+      startDate: "2025-02"
+      location:
+        en: "Remote from Russia"
+        ru: "Удаленно из России"
+      summary:
+        en: "ATOM is building a Russian electric vehicle platform. I work in communications and telemetry on backend services that connect the car, cloud, and external clients, with a focus on latency, security, and operational reliability."
+        ru: "АТОМ строит российскую платформу электромобиля. Я работаю в направлении коммуникаций и телеметрии над backend-сервисами, которые соединяют автомобиль, облако и внешних клиентов, с фокусом на задержку, безопасность и операционную надежность."
+      highlights:
+        -
+          en: "Worked with leadership, peer teams, and architects to turn ambiguous and partially unrealistic requirements into a releasable backend architecture for a new broker."
+          ru: "Работал с руководством, смежными командами и архитекторами, чтобы превратить размытые и частично нереалистичные требования в релизопригодную backend-архитектуру для нового брокера."
+        -
+          en: "Designed and developed an mTLS-secured MQTT broker with Redis-based state recovery for persistent vehicle-to-cloud communication and safe session restoration after restarts."
+          ru: "Спроектировал и разработал MQTT-брокер с mTLS-защитой и восстановлением состояния через Redis для постоянной коммуникации автомобиля с облаком и безопасного восстановления сессий после перезапуска."
+        -
+          en: "Challenged the initial microservice decomposition, showed it could not meet target latency, and advanced a central-broker design that sustained ~70K requests per second at p99 below 50 ms."
+          ru: "Оспорил первоначальную декомпозицию на микросервисы, показал, что она не укладывается в целевую задержку, и продвинул дизайн с центральным брокером, который выдержал ~70K запросов в секунду при p99 ниже 50 мс."
+        -
+          en: "Built production observability and delivery tooling from scratch after losing dedicated DevOps support: metrics, logs, traces, dashboards, alerts, CI/CD, and deployment automation."
+          ru: "С нуля собрал production-инструментарий наблюдаемости и поставки после потери выделенной DevOps-поддержки: метрики, логи, трейсы, дашборды, алерты, CI/CD и автоматизацию деплоя."
+        -
+          en: "Selected key libraries and system components, including Redis for resilient in-memory state and access-control mechanisms for trusted clients."
+          ru: "Выбрал ключевые библиотеки и системные компоненты, включая Redis для устойчивого in-memory состояния и механизмы контроля доступа для доверенных клиентов."
+      stack:
+        - "Go"
+        - "MQTT"
+        - "Redis"
+        - "PostgreSQL"
+        - "Kafka"
+        - "gRPC"
+        - "mTLS"
+        - "Prometheus"
+        - "Grafana"
+        - "Loki"
+        - "Sentry"
+        - "Docker"
+        - "Kubernetes"
+        - "CI/CD"
+      url: "https://atom.auto"
+      icon: "assets/icons/atom.svg"
+    -
+      company: "Sber Tech"
+      role: "Software Engineer, Service Mesh & Platform Infrastructure"
+      startDate: "2024-01"
+      endDate: "2025-02"
+      location:
+        en: "Moscow, Russia"
+        ru: "Москва, Россия"
+      summary:
+        en: "Sber Tech develops Platform V, a large corporate platform. I worked on a heavily modified Istio fork and adjacent infrastructure components for service-mesh control, policy enforcement, and platform integration."
+        ru: "Сбер Тех развивает Platform V, крупную корпоративную платформу. Я работал с сильно модифицированным форком Istio и смежными инфраструктурными компонентами для управления service mesh, контроля политик и платформенной интеграции."
+      highlights:
+        -
+          en: "Restored broken automated testing in a heavily modified Istio fork, returning unit tests to the daily engineering process and raising coverage to 80%."
+          ru: "Восстановил сломанное автотестирование в сильно модифицированном форке Istio, вернув юнит-тесты в ежедневный инженерный процесс и подняв покрытие до 80%."
+        -
+          en: "Designed and built a Go integration-testing framework that provisioned isolated Kubernetes environments, ran tests in parallel, and generated Allure reports for CI."
+          ru: "Спроектировал и реализовал Go-фреймворк интеграционного тестирования, который поднимал изолированные Kubernetes-окружения, запускал тесты параллельно и генерировал Allure-отчеты для CI."
+        -
+          en: "Expanded automation to about 95% of critical functionality through integration tests and, in parallel, fixed several critical defects, stabilizing release pipelines."
+          ru: "Расширил автоматизацию примерно до 95% критического функционала через интеграционные тесты и параллельно исправил несколько критичных дефектов, стабилизируя релизные пайплайны."
+        -
+          en: "Mentored around 10 interns on the framework and automation process, helping convert manual QA scenarios into scalable automated tests."
+          ru: "Наставлял около 10 стажеров по фреймворку и процессу автоматизации, помогая переводить ручные QA-сценарии в масштабируемые автотесты."
+        -
+          en: "Independently designed and implemented a custom Kubernetes resource for managing control-plane and data-plane relationships in Istio; the solution was later presented internally as a target platform approach."
+          ru: "Самостоятельно спроектировал и реализовал пользовательский ресурс Kubernetes для управления связями control plane и data plane в Istio; позже решение представили внутри компании как целевой платформенный подход."
+      stack:
+        - "Go"
+        - "Kubernetes"
+        - "Istio"
+        - "gRPC"
+        - "REST"
+        - "PostgreSQL"
+        - "CI/CD"
+        - "Allure"
+      url: "https://sbertech.ru"
+      icon: "assets/icons/light/sbertech.svg"
+      iconDark: "assets/icons/dark/sbertech.svg"
+    -
+      company: "Lukyanov Tech"
+      role: "Part-Time Mentor / Mock Interviewer"
+      startDate: "2024-01"
+      location:
+        en: "Remote"
+        ru: "Удаленно"
+      summary:
+        en: "A part-time project focused on mentorship, interview preparation, and growth of backend candidates."
+        ru: "Проект неполной занятости в области менторства, подготовки к интервью и роста backend-кандидатов."
+      highlights:
+        -
+          en: "Conduct mock interviews and mentor candidates on backend fundamentals, system design, technical communication, and answer structure."
+          ru: "Провожу пробные собеседования и менторю кандидатов по backend-базе, проектированию систем, технической коммуникации и структуре ответов."
+        -
+          en: "Help improve the mentoring process, hands-on preparation, and feedback quality for students targeting engineering roles."
+          ru: "Помогаю улучшать процесс менторства, практическую подготовку и качество обратной связи для студентов, идущих в инженерные роли."
+      stack:
+        - "Mentoring"
+        - "Mock interviews"
+        - "System design"
+        - "Technical communication"
+      url: "https://lukyanov.tech"
+      icon: "assets/icons/lukyanov.png"
+    -
+      company: "Magnus Tech"
+      role: "Backend Engineer"
+      startDate: "2023-03"
+      endDate: "2024-01"
+      location:
+        en: "Remote"
+        ru: "Удаленно"
+      summary:
+        en: "Magnus Tech is a custom development company. I worked on a pricing-control platform for the Bristol retail chain that combined store data, employee actions, ML pricing recommendations, and photo confirmation into one operational system."
+        ru: "Magnus Tech - компания заказной разработки. Я работал над платформой контроля цен для сети «Бристоль», которая объединяла данные магазинов, действия сотрудников, ML-рекомендации по ценам и фотоподтверждения в единую операционную систему."
+      highlights:
+        -
+          en: "Developed Go backend services from scratch for the pricing platform and integrated store data, product information, ML recommendations, and employee actions into a unified backend flow."
+          ru: "С нуля разрабатывал Go backend-сервисы для платформы ценообразования и интегрировал данные магазинов, продуктовую информацию, ML-рекомендации и действия сотрудников в единый backend-поток."
+        -
+          en: "Designed admin-panel APIs and internal tools for viewing prices, manual overrides, cross-store comparison, and day-to-day operational control."
+          ru: "Спроектировал API панели администрирования и внутренние инструменты для просмотра цен, ручных корректировок, сравнения между магазинами и ежедневного операционного контроля."
+        -
+          en: "Integrated notification flows across web, email, SMS, and mobile channels and maintained API contracts for frontend and mobile teams."
+          ru: "Интегрировал потоки уведомлений для веб, email, SMS и мобильных каналов и поддерживал API-контракты для frontend- и mobile-команд."
+        -
+          en: "Wrote tests, maintained observability, and helped bring the product from active development to production release."
+          ru: "Писал тесты, поддерживал наблюдаемость и участвовал в доведении продукта от активной разработки до production-релиза."
+      stack:
+        - "Go"
+        - "PostgreSQL"
+        - "Redis"
+        - "Kafka"
+        - "MinIO"
+        - "REST"
+        - "gRPC"
+        - "Prometheus"
+        - "CI/CD"
+      url: "https://magnustech.com"
+      icon: "assets/icons/magnus.svg"
+    -
+      company: "Exnode"
+      role: "Backend Engineer"
+      startDate: "2022-09"
+      endDate: "2023-03"
+      location:
+        en: "Moscow, Russia"
+        ru: "Москва, Россия"
+      summary:
+        en: "Exnode developed crypto exchange, B2B payment, and P2P trading products."
+        ru: "Exnode развивал продукты криптобиржи, B2B-платежей и P2P-обмена."
+      highlights:
+        -
+          en: "Split a large monolithic backend into smaller services and replaced part of internal REST communication with gRPC to reduce latency and simplify service boundaries."
+          ru: "Разделил большой монолитный backend на более мелкие сервисы и заменил часть внутреннего REST-взаимодействия на gRPC, чтобы снизить задержку и упростить границы сервисов."
+        -
+          en: "Optimized payment and reporting queries using EXPLAIN ANALYZE, cutting several heavy PostgreSQL queries from 10-30 seconds to near real time."
+          ru: "Оптимизировал платежные и отчетные запросы через EXPLAIN ANALYZE, сократив несколько тяжелых PostgreSQL-запросов с 10-30 секунд до почти реального времени."
+        -
+          en: "Implemented key product capabilities around online payments, pricing, email notifications, Telegram alerts, and magic-link authentication."
+          ru: "Реализовал ключевые продуктовые возможности вокруг онлайн-платежей, ценообразования, email-уведомлений, Telegram-оповещений и magic-link аутентификации."
+        -
+          en: "Investigated and localized a critical currency-conversion incident, rolled back affected transactions, and then strengthened validation, observability, and release discipline."
+          ru: "Разобрал и локализовал критический инцидент с конвертацией валют, откатил затронутые транзакции и затем усилил валидацию, наблюдаемость и дисциплину релизов."
+      stack:
+        - "Go"
+        - "PostgreSQL"
+        - "Redis"
+        - "RabbitMQ"
+        - "REST"
+        - "gRPC"
+        - "Grafana"
+        - "Telegram Bot API"
+      url: "https://exnode.ru"
+      icon: "assets/icons/light/exnode.svg"
+      iconDark: "assets/icons/dark/exnode.svg"
+    -
+      company:
+        en: "Kaluga Power Supply Company"
+        ru: "Калужская сбытовая компания"
+      role: "Backend Engineer"
+      startDate: "2021-10"
+      endDate: "2022-03"
+      location:
+        en: "Remote"
+        ru: "Удаленно"
+      summary:
+        en: "An early backend role in utility payment systems, customer portals, and administrative services."
+        ru: "Ранняя backend-роль в системах коммунальных платежей, клиентских кабинетов и административных сервисов."
+      highlights:
+        -
+          en: "Developed and launched the core backend architecture for a customer portal and administrative system with integrations to 1C, payments, dashboards, and web/mobile clients."
+          ru: "Разработал и запустил основную backend-архитектуру клиентского портала и административной системы с интеграциями в 1С, платежи, дашборды и веб/мобильные клиенты."
+        -
+          en: "Rewrote a key service from PHP to Go, migrating critical 1C integration and payment-processing scenarios without losing business functionality."
+          ru: "Переписал на Go ключевой сервис, ранее реализованный на PHP: перенес критичные сценарии интеграции с 1С и обработки платежей без потери бизнес-функциональности."
+        -
+          en: "Worked as the sole backend engineer on the project, delivering account, billing, and operational views for customers and property management."
+          ru: "Работал единственным backend-инженером на проекте, реализуя аккаунты, биллинг и операционные представления для клиентов и управления объектами."
+      stack:
+        - "Go"
+        - "PHP"
+        - "PostgreSQL"
+        - "1C integrations"
+        - "Payments"
+        - "Dashboards"
+      url: "https://kskkaluga.ru"
+      icon: "assets/icons/kaluga.svg"
+    -
+      company:
+        en: "Center for Regional Management of Lipetsk Oblast (CUR)"
+        ru: "Центр Управления Регионом Липецкой области (ЦУР)"
+      role: "Java Developer"
+      startDate: "2021-06"
+      endDate: "2021-11"
+      location:
+        en: "Lipetsk, Russia"
+        ru: "Липецк, Россия"
+      summary:
+        en: "My first commercial backend role in Java, focused on public digital and monitoring systems."
+        ru: "Моя первая коммерческая backend-роль на Java, связанная с государственными цифровыми и мониторинговыми системами."
+      highlights:
+        -
+          en: "Contributed to backend services for regional digital products and monitoring systems in an environment with a large amount of legacy systems."
+          ru: "Участвовал в разработке backend-сервисов для региональных цифровых продуктов и систем мониторинга в окружении с большим количеством легаси-систем."
+        -
+          en: "Worked on business logic and service development for government processes."
+          ru: "Работал над бизнес-логикой и сервисной разработкой для государственных процессов."
+      stack:
+        - "Java"
+        - "SQL"
+        - "Backend"
+education:
+  title:
+    en: "Education"
+    ru: "Образование"
+  subtitle:
+    en: "Formal education and current degree track."
+    ru: "Формальное образование и текущая степень."
+  items:
+    -
+      institution:
+        en: "Voronezh State Technical University"
+        ru: "Воронежский государственный технический университет"
+      degree:
+        en: "B.S. in Intelligent Automated Systems (part-time)"
+        ru: "Бакалавриат, интеллектуальные автоматизированные системы (заочно)"
+      endDate: "2030"
+      expected: true
+    -
+      institution:
+        en: "Voronezh State Technical University"
+        ru: "Воронежский государственный технический университет"
+      degree:
+        en: "Secondary vocational education in Information Technology and Programming"
+        ru: "СПО, информационные технологии и программирование"
+      startDate: "2021"
+      endDate: "2025"
+strengths:
+  title:
+    en: "Profile"
+    ru: "Профиль"
+  subtitle:
+    en: "Patterns that best describe my engineering style and career direction."
+    ru: "Паттерны, которые лучше всего описывают мой инженерный стиль и карьерное направление."
+  cards:
+    -
+      title:
+        en: "Architecture through trade-offs"
+        ru: "Архитектура через компромиссы"
+      body:
+        en: "For me, choosing the right tool and the right system shape matters: Redis or PostgreSQL, gRPC or REST, a more complex setup or a simplified architecture to minimize latency and improve adaptability."
+        ru: "Мне важно выбирать правильный инструмент и правильную форму системы: Redis или PostgreSQL, gRPC или REST, более сложная схема или упрощение архитектуры ради минимизации задержки и увеличения мобильности."
+    -
+      title:
+        en: "Product + infrastructure"
+        ru: "Продукт + инфраструктура"
+      body:
+        en: "My recent roles are infrastructure-focused, but I also built product backend systems for retail pricing, crypto payments, utility billing, and internal administrative panels."
+        ru: "Последние роли у меня инфраструктурные, но я также строил продуктовые backend-системы для ценообразования в ритейле, криптоплатежей, коммунального биллинга и внутренних административных панелей."
+    -
+      title:
+        en: "Leadership trajectory"
+        ru: "Траектория в лидерство"
+      body:
+        en: "I already mentor candidates and interns, and in the coming years I want to grow into technical leadership without losing hands-on depth and systems thinking."
+        ru: "Я уже менторю кандидатов и стажеров, а в ближайшие годы хочу вырасти в техническое лидерство, не теряя прикладной глубины и системного мышления."
+    -
+      title:
+        en: "From Java to Go"
+        ru: "От Java к Go"
+      body:
+        en: "I have 4 years of commercial backend development in Go and 6 months in Java. I started with Java as a teenager, got my first commercial backend role in Java, and then moved to Go because explicit engineering, simpler syntax, and low-latency services fit me better."
+        ru: "У меня 4 года коммерческой backend-разработки на Go и 6 месяцев на Java. Я начал с Java еще подростком, получил первую коммерческую backend-роль на Java, а затем перешел в Go, потому что мне ближе явная инженерия, более простой синтаксис и сервисы с низкой задержкой."
+skills:
+  title:
+    en: "Key stack"
+    ru: "Ключевой стек"
+  groups:
+    -
+      title:
+        en: "Languages"
+        ru: "Языки"
+      items:
+        - "Go"
+        - "Java"
+        - "Python"
+        - "SQL"
+    -
+      title:
+        en: "APIs & Messaging"
+        ru: "API и обмен сообщениями"
+      items:
+        - "gRPC"
+        - "REST"
+        - "MQTT"
+        - "Kafka"
+        - "RabbitMQ"
+        - "NATS"
+    -
+      title:
+        en: "Data & Storage"
+        ru: "Данные и хранилища"
+      items:
+        - "PostgreSQL"
+        - "Redis"
+        - "MinIO"
+    -
+      title:
+        en: "Platform"
+        ru: "Платформа"
+      items:
+        - "Docker"
+        - "Kubernetes"
+        - "Helm"
+        - "Istio"
+        - "Linux"
+        - "Git"
+        - "CI/CD"
+    -
+      title:
+        en: "Observability & Quality"
+        ru: "Наблюдаемость и качество"
+      items:
+        - "Prometheus"
+        - "Grafana"
+        - "Loki"
+        - "Sentry"
+        - "Allure"
+        - "Testing frameworks"
+preferences:
+  title:
+    en: "What recruiters should know"
+    ru: "Что важно знать рекрутеру"
+  items:
+    -
+      en: "I primarily see myself as a backend engineer and feel strongest in Go, distributed systems, and complex backend logic."
+      ru: "Я в первую очередь вижу себя backend-инженером и сильнее всего чувствую себя в Go, распределенных системах и сложной backend-логике."
+    -
+      en: "I am comfortable in both product and platform teams: I can switch between latency-sensitive infrastructure and business-facing backend functionality."
+      ru: "Мне комфортно и в продуктовых, и в платформенных командах: я умею переключаться между инфраструктурой, чувствительной к задержкам, и backend-функциональностью, которая ближе к бизнесу."
+    -
+      en: "I am the best fit for teams solving high-load, low-latency, or technically ambiguous backend problems."
+      ru: "Лучше всего подхожу командам, которые решают высоконагруженные, низколатентные или технически неоднозначные backend-задачи."
+    -
+      en: "In the next 2-5 years, I want to grow into a tech lead and broader technical leadership role while remaining a deeply technical engineer."
+      ru: "В ближайшие 2-5 лет хочу вырасти в роль техлида и технического лидера, оставаясь при этом глубоко техническим инженером."
+    -
+      en: "I use English in work and interview contexts when needed and continue improving spoken fluency for international teams."
+      ru: "Я использую английский в рабочих и интервью-контекстах, когда это нужно, и продолжаю улучшать разговорную беглость для международных команд."
+    -
+      en: "Outside work, I mentor candidates, cycle, swim, go to the gym, and enjoy traveling; Japan is one of the places I especially want to revisit."
+      ru: "Вне работы я менторю кандидатов, катаюсь на велосипеде, плаваю, хожу в зал и люблю путешествовать; Япония - одно из мест, куда мне особенно хочется вернуться."
+gallery:
+  title:
+    en: "A few more photos"
+    ru: "Еще несколько фото"
+  subtitle:
+    en: "I intentionally keep this public photo section small: this site is primarily about my work, but I want it to stay human and real."
+    ru: "Этот публичный фото-раздел я специально держу небольшим: сайт в первую очередь про мою работу, но мне хочется, чтобы он оставался живым и человеческим."
+  items:
+    -
+      src: "assets/photos/matvey-stairs.jpg"
+      caption:
+        en: "Stairs from the anime \"Your Name\""
+        ru: "Лестница из аниме «Твоё имя»"
+      position: "center 18%"
+      filter: "brightness(0.8) contrast(1.03) saturate(0.88)"
+    -
+      src: "assets/photos/matvey-japan.jpg"
+      caption:
+        en: "Kendo training"
+        ru: "Тренировка по Кэндо"
+      filter: "brightness(1.06) contrast(1.03) saturate(0.92)"
+    -
+      src: "assets/photos/matvey-cafe.jpg"
+      caption:
+        en: "Photo from a cafe"
+        ru: "Фото из кафе"
+      filter: "brightness(0.96) contrast(1.02) saturate(0.92)"
+    -
+      src: "assets/photos/matvey-mountains.jpg"
+      caption:
+        en: "A 1,500m mountain climb"
+        ru: "Подъём на 1 500м в гору"
+      position: "center 26%"
+      filter: "brightness(0.88) contrast(1.03) saturate(0.92)"
+    -
+      src: "assets/photos/matvey-lake.jpg"
+      caption:
+        en: "Japanese garden"
+        ru: "Японский сад"
+      filter: "brightness(0.9) contrast(1.02) saturate(0.9)"
+    -
+      src: "assets/photos/matvey-travel.jpg"
+      caption:
+        en: "Cappadocia atmosphere (Turkey)"
+        ru: "Атмосфера Каппадокии (Турция)"
+      filter: "brightness(1.01) contrast(1.03) saturate(0.9)"

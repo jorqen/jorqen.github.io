@@ -1,3 +1,3 @@
-- Resume content in English and Russian must always be fully identical in meaning and scope.
+- Resume content in English and Russian must always be fully identical in meaning and scope for all extensions.
 - Resume experience must be sorted by work start date.
-- In downloaded resumes, keep all current contacts and also include the website link in contacts: https://jorqen.github.io/jorqen/
+- In downloaded resumes, keep all current contacts and also include the website link in contacts: https://jorqen.github.io
