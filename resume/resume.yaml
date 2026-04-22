@@ -80,7 +80,7 @@ person:
   headline: "Backend Developer / Software Engineer"
   role:
     en: "4+ years building production Go backends and distributed systems | high-load and low-latency infrastructure, service mesh, and fintech/crypto products."
-    ru: "4+ года строю production backend-системы и распределенные системы на Go | high-load and low-latency инфраструктура, service mesh и fintech/crypto-продукты."
+    ru: "4+ года строю production backend-системы и распределенные системы на Go | high-load и low-latency инфраструктура, service mesh и fintech/crypto-продукты."
   summary:
     en: >-
       I am a backend and distributed systems engineer with 4+ years of commercial experience in Go. I work across both product and infrastructure domains and am strongest where ambiguous requirements need to become a concrete production system with sound trade-offs, observability, security, testing, and reliable delivery. Across recent roles I have built backend systems for secure vehicle telemetry and car-to-cloud connectivity, service-mesh platform infrastructure and testing frameworks, retail pricing operations, crypto payments and exchange flows, utility billing, and public digital services.
