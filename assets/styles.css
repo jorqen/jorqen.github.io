@@ -516,9 +516,11 @@ h1 {
   height: 28px;
   border-radius: 8px;
   object-fit: contain;
+  object-position: center;
   background: var(--surface);
   border: 1px solid var(--line);
   padding: 2px;
+  flex-shrink: 0;
 }
 
 .company-link {
@@ -612,6 +614,14 @@ h1 {
 
 .education-item h3 {
   margin: 0;
+  font-size: 1rem;
+}
+
+.education-heading {
+  min-width: 0;
+}
+
+.education-item .company-link {
   font-size: 1rem;
 }
 

@@ -41,7 +41,7 @@ window.JORQEN_RESUME_DATA = {
         "kicker": "Backend Developer / Software Engineer",
         "name": "Matvey Sizov",
         "role": "More than 4 years in backend development. Golang, Java, distributed systems, product and infrastructure engineering.",
-        "summary": "I started programming in Java in my early teens, entered backend professionally through Java, and then shifted my primary focus to Go because explicit and understandable systems are a better fit for me. Today I work on both infrastructure and product backends, and I am strongest where a team needs someone who can turn ambiguous requirements into a production system with reasonable trade-offs, observability, and reliable delivery.",
+        "summary": "I started programming in Java in my early teens, entered backend professionally through Java, and then shifted my primary focus to Go because explicit and understandable systems are a better fit for me. Today I work on both infrastructure and product backends, and I am strongest where a team needs someone who can turn ambiguous requirements into a production system with reasonable trade-offs, observability, and reliable delivery. Across recent roles I have built backend systems for vehicle telemetry and car-to-cloud communication, service-mesh platform infrastructure, retail pricing operations, crypto payments and exchange flows, utility billing, and public digital services.",
         "photo": {
           "src": "assets/photos/matvey-studio.jpg",
           "position": "center 18%",
@@ -100,10 +100,10 @@ window.JORQEN_RESUME_DATA = {
         "items": [
           {
             "company": "ATOM",
-            "role": "Senior Software Engineer, Communications & Telemetry",
+            "role": "Senior Software Engineer",
             "period": "Feb 2025 - Present",
             "duration": "1 yr 2 mos",
-            "location": "Remote from Russia",
+            "location": "Remote",
             "intro": "ATOM is building a Russian electric vehicle platform. I work in communications and telemetry on backend services that connect the car, cloud, and external clients, with a focus on latency, security, and operational reliability.",
             "bullets": [
               "Worked with leadership, peer teams, and architects to turn ambiguous and partially unrealistic requirements into a releasable backend architecture for a new broker.",
@@ -137,7 +137,7 @@ window.JORQEN_RESUME_DATA = {
             "period": "Jan 2024 - Feb 2025",
             "duration": "1 yr 1 mo",
             "location": "Moscow, Russia",
-            "intro": "Sber Tech develops Platform V, a large corporate platform. I worked on a heavily modified Istio fork and adjacent infrastructure components for service-mesh control, policy enforcement, and platform integration.",
+            "intro": "Sber Tech develops Platform V, a large corporate platform. I worked on a heavily modified Istio fork and adjacent infrastructure components for service-mesh control, policy enforcement, and platform integration in the Service Mesh & Platform Infrastructure team. The project itself was a platform layer for routing, policy, and control-plane/data-plane management across Kubernetes environments inside the ecosystem.",
             "bullets": [
               "Restored broken automated testing in a heavily modified Istio fork, returning unit tests to the daily engineering process and raising coverage to 80%.",
               "Designed and built a Go integration-testing framework that provisioned isolated Kubernetes environments, ran tests in parallel, and generated Allure reports for CI.",
@@ -165,7 +165,7 @@ window.JORQEN_RESUME_DATA = {
             "period": "Jan 2024 - Present",
             "duration": "2 yrs 3 mos",
             "location": "Remote",
-            "intro": "A part-time project focused on mentorship, interview preparation, and growth of backend candidates.",
+            "intro": "A part-time project focused on mentorship, interview preparation, and growth of backend candidates. In practice, it is a hands-on educational service built around individual preparation tracks and mock interviews for engineers who want stronger fundamentals, clearer system-design thinking, and better performance in commercial hiring loops.",
             "bullets": [
               "Conduct mock interviews and mentor candidates on backend fundamentals, system design, technical communication, and answer structure.",
               "Help improve the mentoring process, hands-on preparation, and feedback quality for students targeting engineering roles."
@@ -181,11 +181,11 @@ window.JORQEN_RESUME_DATA = {
           },
           {
             "company": "Magnus Tech",
-            "role": "Backend Engineer",
+            "role": "Software Engineer",
             "period": "Mar 2023 - Jan 2024",
             "duration": "10 mos",
             "location": "Remote",
-            "intro": "Magnus Tech is a custom development company. I worked on a pricing-control platform for the Bristol retail chain that combined store data, employee actions, ML pricing recommendations, and photo confirmation into one operational system.",
+            "intro": "Magnus Tech is a custom development company. I worked on a pricing-control platform for the Bristol shop retail chain that combines store data, employee actions, ML pricing recommendations, and photo confirmation into one operational system. The product was used by operational teams to form price, review store evidence, and coordinate corrective actions across a large retail network.",
             "bullets": [
               "Developed Go backend services from scratch for the pricing platform and integrated store data, product information, ML recommendations, and employee actions into a unified backend flow.",
               "Designed admin-panel APIs and internal tools for viewing prices, manual overrides, cross-store comparison, and day-to-day operational control.",
@@ -212,7 +212,7 @@ window.JORQEN_RESUME_DATA = {
             "period": "Sep 2022 - Mar 2023",
             "duration": "6 mos",
             "location": "Moscow, Russia",
-            "intro": "Exnode develops crypto exchange, B2B payment, and P2P trading products.",
+            "intro": "Exnode develops crypto exchange, B2B payment, and P2P trading products. I worked on backend parts of transactional flows where payments, exchange operations, and reporting had to stay consistent, fast and exact under real business load.",
             "bullets": [
               "Split a large monolithic backend into smaller services and replaced part of internal REST communication with gRPC to reduce latency and simplify service boundaries.",
               "Optimized payment and reporting queries using EXPLAIN ANALYZE, cutting several heavy PostgreSQL queries from 10-30 seconds to near real time.",
@@ -235,11 +235,11 @@ window.JORQEN_RESUME_DATA = {
           },
           {
             "company": "Kaluga Power Supply Company",
-            "role": "Backend Engineer",
+            "role": "GoLang Developer",
             "period": "Oct 2021 - Mar 2022",
             "duration": "5 mos",
             "location": "Remote",
-            "intro": "An early backend role in utility payment systems, customer portals, and administrative services.",
+            "intro": "A customer portal and internal administrative system for personal accounts, billing, payments, and property-management operations.",
             "bullets": [
               "Developed and launched the core backend architecture for a customer portal and administrative system with integrations to 1C, payments, dashboards, and web/mobile clients.",
               "Rewrote a key service from PHP to Go, migrating critical 1C integration and payment-processing scenarios without losing business functionality.",
@@ -262,7 +262,7 @@ window.JORQEN_RESUME_DATA = {
             "period": "Jun 2021 - Nov 2021",
             "duration": "5 mos",
             "location": "Lipetsk, Russia",
-            "intro": "My first commercial backend role in Java, focused on public digital and monitoring systems.",
+            "intro": "The projects were regional digital services and monitoring tools that supported government workflows and citizen-facing operational reporting.",
             "bullets": [
               "Contributed to backend services for regional digital products and monitoring systems in an environment with a large amount of legacy systems.",
               "Worked on business logic and service development for government processes."
@@ -278,16 +278,23 @@ window.JORQEN_RESUME_DATA = {
       "education": {
         "title": "Education",
         "subtitle": "Formal education and current degree track.",
+        "institutionSiteLabel": "University site",
         "items": [
           {
             "institution": "Voronezh State Technical University",
             "degree": "B.S. in Intelligent Automated Systems (part-time)",
-            "period": "2025 - Expected graduation: 2030"
+            "period": "2025 - Expected graduation: 2030",
+            "institutionIcon": "assets/icons/light/vstu.svg",
+            "institutionIconDark": "assets/icons/dark/vstu.svg",
+            "institutionUrl": "https://cchgeu.ru/"
           },
           {
             "institution": "Voronezh State Technical University",
             "degree": "Secondary vocational education in Information Technology and Programming",
-            "period": "2021 - 2025"
+            "period": "2021 - 2025",
+            "institutionIcon": "assets/icons/light/vstu.svg",
+            "institutionIconDark": "assets/icons/dark/vstu.svg",
+            "institutionUrl": "https://cchgeu.ru/"
           }
         ]
       },
@@ -449,7 +456,7 @@ window.JORQEN_RESUME_DATA = {
         "kicker": "Backend Developer / Software Engineer",
         "name": "Матвей Сизов",
         "role": "Более 4-х лет в backend-разработке. Golang, Java, распределенные системы, продуктовая и инфраструктурная разработка.",
-        "summary": "Я начал программировать на Java еще в раннем подростковом возрасте, вошел в профессию backend-разработчика через Java, а затем перевел основной фокус на Go, потому что мне ближе явные и понятные системы. Сейчас я работаю и с инфраструктурным, и с продуктовым backend, а сильнее всего проявляюсь там, где команде нужен человек, который превращает размытые требования в production-систему с разумными компромиссами, наблюдаемостью и надежной поставкой решений.",
+        "summary": "Я начал программировать на Java еще в раннем подростковом возрасте, вошел в профессию backend-разработчика через Java, а затем перевел основной фокус на Go, потому что мне ближе явные и понятные системы. Сейчас я работаю и с инфраструктурным, и с продуктовым backend, а сильнее всего проявляюсь там, где команде нужен человек, который превращает размытые требования в production-систему с разумными компромиссами, наблюдаемостью и надежной поставкой решений. Я строил backend-системы для телеметрии и связи автомобиля с облаком, платформенной service-mesh-инфраструктуры, операционного ценообразования в ритейле, криптоплатежей и обменных сценариев, коммунального биллинга и государственных цифровых сервисов.",
         "photo": {
           "src": "assets/photos/matvey-studio.jpg",
           "position": "center 18%",
@@ -508,11 +515,11 @@ window.JORQEN_RESUME_DATA = {
         "items": [
           {
             "company": "АТОМ",
-            "role": "Senior Software Engineer, Communications & Telemetry",
+            "role": "Senior Software Engineer",
             "period": "Фев 2025 - настоящее время",
             "duration": "1 г. 2 мес.",
-            "location": "Удаленно из России",
-            "intro": "АТОМ строит российскую платформу электромобиля. Я работаю в направлении коммуникаций и телеметрии над backend-сервисами, которые соединяют автомобиль, облако и внешних клиентов, с фокусом на задержку, безопасность и операционную надежность.",
+            "location": "Удаленно",
+            "intro": "АТОМ строит российскую платформу электромобиля. Я работаю в направлении коммуникаций и телеметрии над backend-сервисами, которые соединяют автомобиль, облако и внешних клиентов, с фокусом на маленькую задержку, безопасность и операционную надежность.",
             "bullets": [
               "Работал с руководством, смежными командами и архитекторами, чтобы превратить размытые и частично нереалистичные требования в релизопригодную backend-архитектуру для нового брокера.",
               "Спроектировал и разработал MQTT-брокер с mTLS-защитой и восстановлением состояния через Redis для постоянной коммуникации автомобиля с облаком и безопасного восстановления сессий после перезапуска.",
@@ -545,7 +552,7 @@ window.JORQEN_RESUME_DATA = {
             "period": "Янв 2024 - Фев 2025",
             "duration": "1 г. 1 мес.",
             "location": "Москва, Россия",
-            "intro": "Сбер Тех развивает Platform V, крупную корпоративную платформу. Я работал с сильно модифицированным форком Istio и смежными инфраструктурными компонентами для управления service mesh, контроля политик и платформенной интеграции.",
+            "intro": "Сбер Тех развивает Platform V, крупную корпоративную платформу. Я работал с сильно модифицированным форком Istio и смежными инфраструктурными компонентами для управления service mesh, контроля политик и платформенной интеграции в команде Service Mesh & Platform Infrastructure. Сам проект был платформенным слоем для маршрутизации, политик и управления связями control plane/data plane в Kubernetes-окружениях внутри экосистемы.",
             "bullets": [
               "Восстановил сломанное автотестирование в сильно модифицированном форке Istio, вернув юнит-тесты в ежедневный инженерный процесс и подняв покрытие до 80%.",
               "Спроектировал и реализовал Go-фреймворк интеграционного тестирования, который поднимал изолированные Kubernetes-окружения, запускал тесты параллельно и генерировал Allure-отчеты для CI.",
@@ -573,7 +580,7 @@ window.JORQEN_RESUME_DATA = {
             "period": "Янв 2024 - настоящее время",
             "duration": "2 г. 3 мес.",
             "location": "Удаленно",
-            "intro": "Проект неполной занятости в области менторства, подготовки к интервью и роста backend-кандидатов.",
+            "intro": "Проект неполной занятости в области менторства, подготовки к интервью и роста backend-кандидатов. На практике это прикладной образовательный сервис, построенный вокруг индивидуальных треков подготовки и пробных интервью для инженеров, которым нужны более сильная база, более ясное системное мышление и лучший результат в коммерческих процессах найма.",
             "bullets": [
               "Провожу пробные собеседования и менторю кандидатов по backend-базе, проектированию систем, технической коммуникации и структуре ответов.",
               "Помогаю улучшать процесс менторства, практическую подготовку и качество обратной связи для студентов, идущих в инженерные роли."
@@ -589,11 +596,11 @@ window.JORQEN_RESUME_DATA = {
           },
           {
             "company": "Magnus Tech",
-            "role": "Backend Engineer",
+            "role": "Software Engineer",
             "period": "Мар 2023 - Янв 2024",
             "duration": "10 мес.",
             "location": "Удаленно",
-            "intro": "Magnus Tech - компания заказной разработки. Я работал над платформой контроля цен для сети «Бристоль», которая объединяла данные магазинов, действия сотрудников, ML-рекомендации по ценам и фотоподтверждения в единую операционную систему.",
+            "intro": "Magnus Tech - компания заказной разработки. Я работал над платформой контроля цен для сети магазинов «Бристоль», которая объединяет данные магазинов, действия сотрудников, ML-рекомендации по ценам и фотоподтверждения в единую операционную систему. Продукт использовался операционными командами для формирования цен, проверки подтверждений из магазинов и координации корректирующих действий по большой розничной сети.",
             "bullets": [
               "С нуля разрабатывал Go backend-сервисы для платформы ценообразования и интегрировал данные магазинов, продуктовую информацию, ML-рекомендации и действия сотрудников в единый backend-поток.",
               "Спроектировал API панели администрирования и внутренние инструменты для просмотра цен, ручных корректировок, сравнения между магазинами и ежедневного операционного контроля.",
@@ -620,7 +627,7 @@ window.JORQEN_RESUME_DATA = {
             "period": "Сен 2022 - Мар 2023",
             "duration": "6 мес.",
             "location": "Москва, Россия",
-            "intro": "Exnode развивает продукты криптобиржи, B2B-платежей и P2P-обмена.",
+            "intro": "Exnode развивает продукты криптобиржи, B2B-платежей и P2P-обмена. Я работал над backend-частями транзакционных сценариев, где платежи, обменные операции, и отчетность должны были оставаться консистентными, быстрыми и точными под реальной бизнес-нагрузкой.",
             "bullets": [
               "Разделил большой монолитный backend на более мелкие сервисы и заменил часть внутреннего REST-взаимодействия на gRPC, чтобы снизить задержку и упростить границы сервисов.",
               "Оптимизировал платежные и отчетные запросы через EXPLAIN ANALYZE, сократив несколько тяжелых PostgreSQL-запросов с 10-30 секунд до почти реального времени.",
@@ -643,11 +650,11 @@ window.JORQEN_RESUME_DATA = {
           },
           {
             "company": "Калужская сбытовая компания",
-            "role": "Backend Engineer",
+            "role": "GoLang Developer",
             "period": "Окт 2021 - Мар 2022",
             "duration": "5 мес.",
             "location": "Удаленно",
-            "intro": "Ранняя backend-роль в системах коммунальных платежей, клиентских кабинетов и административных сервисов.",
+            "intro": "Клиентский портал и внутренняя административная система для лицевых счетов, биллинга, платежей и операционных сценариев управления теплообслуживания объектов.",
             "bullets": [
               "Разработал и запустил основную backend-архитектуру клиентского портала и административной системы с интеграциями в 1С, платежи, дашборды и веб/мобильные клиенты.",
               "Переписал на Go ключевой сервис, ранее реализованный на PHP: перенес критичные сценарии интеграции с 1С и обработки платежей без потери бизнес-функциональности.",
@@ -670,7 +677,7 @@ window.JORQEN_RESUME_DATA = {
             "period": "Июн 2021 - Ноя 2021",
             "duration": "5 мес.",
             "location": "Липецк, Россия",
-            "intro": "Моя первая коммерческая backend-роль на Java, связанная с государственными цифровыми и мониторинговыми системами.",
+            "intro": "Проекты представляли собой региональные цифровые сервисы и инструменты мониторинга, которые поддерживали государственные процессы и операционную отчетность для сценариев, связанных с гражданами.",
             "bullets": [
               "Участвовал в разработке backend-сервисов для региональных цифровых продуктов и систем мониторинга в окружении с большим количеством легаси-систем.",
               "Работал над бизнес-логикой и сервисной разработкой для государственных процессов."
@@ -686,16 +693,23 @@ window.JORQEN_RESUME_DATA = {
       "education": {
         "title": "Образование",
         "subtitle": "Формальное образование и текущая степень.",
+        "institutionSiteLabel": "Сайт университета",
         "items": [
           {
             "institution": "Воронежский государственный технический университет",
             "degree": "Бакалавриат, интеллектуальные автоматизированные системы (заочно)",
-            "period": "2025 - Ожидаемое окончание: 2030"
+            "period": "2025 - Ожидаемое окончание: 2030",
+            "institutionIcon": "assets/icons/light/vstu.svg",
+            "institutionIconDark": "assets/icons/dark/vstu.svg",
+            "institutionUrl": "https://cchgeu.ru/"
           },
           {
             "institution": "Воронежский государственный технический университет",
             "degree": "СПО, информационные технологии и программирование",
-            "period": "2021 - 2025"
+            "period": "2021 - 2025",
+            "institutionIcon": "assets/icons/light/vstu.svg",
+            "institutionIconDark": "assets/icons/dark/vstu.svg",
+            "institutionUrl": "https://cchgeu.ru/"
           }
         ]
       },

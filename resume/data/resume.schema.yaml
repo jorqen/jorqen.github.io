@@ -307,6 +307,8 @@ definitions:
         "$ref": "#/definitions/localizedString"
       subtitle:
         "$ref": "#/definitions/localizedString"
+      institutionSiteLabel:
+        "$ref": "#/definitions/localizedString"
       items:
         type: "array"
         minItems: 1
@@ -329,6 +331,14 @@ definitions:
         "$ref": "#/definitions/yearOrYearMonth"
       endDate:
         "$ref": "#/definitions/yearOrYearMonth"
+      url:
+        type: "string"
+        minLength: 1
+        format: "uri"
+      icon:
+        "$ref": "#/definitions/stringValue"
+      iconDark:
+        "$ref": "#/definitions/stringValue"
   strengthsSection:
     type: "object"
     required:

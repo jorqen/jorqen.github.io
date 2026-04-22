@@ -44,6 +44,9 @@ assets:
         iconDark: "assets/icons/dark/exnode.svg"
       kalugaPower: &icon_company_kaluga
         icon: "assets/icons/kaluga.svg"
+      vstu: &icon_company_vstu
+        icon: "assets/icons/light/vstu.svg"
+        iconDark: "assets/icons/dark/vstu.svg"
   photos:
     heroStudio: &photo_hero_studio
       src: "assets/photos/matvey-studio.jpg"
@@ -79,8 +82,10 @@ person:
     en: "More than 4 years in backend development. Golang, Java, distributed systems, product and infrastructure engineering."
     ru: "Более 4-х лет в backend-разработке. Golang, Java, распределенные системы, продуктовая и инфраструктурная разработка."
   summary:
-    en: "I started programming in Java in my early teens, entered backend professionally through Java, and then shifted my primary focus to Go because explicit and understandable systems are a better fit for me. Today I work on both infrastructure and product backends, and I am strongest where a team needs someone who can turn ambiguous requirements into a production system with reasonable trade-offs, observability, and reliable delivery."
-    ru: "Я начал программировать на Java еще в раннем подростковом возрасте, вошел в профессию backend-разработчика через Java, а затем перевел основной фокус на Go, потому что мне ближе явные и понятные системы. Сейчас я работаю и с инфраструктурным, и с продуктовым backend, а сильнее всего проявляюсь там, где команде нужен человек, который превращает размытые требования в production-систему с разумными компромиссами, наблюдаемостью и надежной поставкой решений."
+    en: >-
+      I started programming in Java in my early teens, entered backend professionally through Java, and then shifted my primary focus to Go because explicit and understandable systems are a better fit for me. Today I work on both infrastructure and product backends, and I am strongest where a team needs someone who can turn ambiguous requirements into a production system with reasonable trade-offs, observability, and reliable delivery. Across recent roles I have built backend systems for vehicle telemetry and car-to-cloud communication, service-mesh platform infrastructure, retail pricing operations, crypto payments and exchange flows, utility billing, and public digital services.
+    ru: >-
+      Я начал программировать на Java еще в раннем подростковом возрасте, вошел в профессию backend-разработчика через Java, а затем перевел основной фокус на Go, потому что мне ближе явные и понятные системы. Сейчас я работаю и с инфраструктурным, и с продуктовым backend, а сильнее всего проявляюсь там, где команде нужен человек, который превращает размытые требования в production-систему с разумными компромиссами, наблюдаемостью и надежной поставкой решений. Я строил backend-системы для телеметрии и связи автомобиля с облаком, платформенной service-mesh-инфраструктуры, операционного ценообразования в ритейле, криптоплатежей и обменных сценариев, коммунального биллинга и государственных цифровых сервисов.
   photo:
     <<: *photo_hero_studio
     caption:
@@ -152,14 +157,16 @@ experience:
       company:
         en: "ATOM"
         ru: "АТОМ"
-      role: "Senior Software Engineer, Communications & Telemetry"
+      role: "Senior Software Engineer"
       startDate: "2025-02"
       location:
-        en: "Remote from Russia"
-        ru: "Удаленно из России"
+        en: "Remote"
+        ru: "Удаленно"
       summary:
-        en: "ATOM is building a Russian electric vehicle platform. I work in communications and telemetry on backend services that connect the car, cloud, and external clients, with a focus on latency, security, and operational reliability."
-        ru: "АТОМ строит российскую платформу электромобиля. Я работаю в направлении коммуникаций и телеметрии над backend-сервисами, которые соединяют автомобиль, облако и внешних клиентов, с фокусом на задержку, безопасность и операционную надежность."
+        en: >-
+          ATOM is building a Russian electric vehicle platform. I work in communications and telemetry on backend services that connect the car, cloud, and external clients, with a focus on latency, security, and operational reliability.
+        ru: >-
+          АТОМ строит российскую платформу электромобиля. Я работаю в направлении коммуникаций и телеметрии над backend-сервисами, которые соединяют автомобиль, облако и внешних клиентов, с фокусом на маленькую задержку, безопасность и операционную надежность.
       highlights:
         - en: "Worked with leadership, peer teams, and architects to turn ambiguous and partially unrealistic requirements into a releasable backend architecture for a new broker."
           ru: "Работал с руководством, смежными командами и архитекторами, чтобы превратить размытые и частично нереалистичные требования в релизопригодную backend-архитектуру для нового брокера."
@@ -196,8 +203,10 @@ experience:
         en: "Moscow, Russia"
         ru: "Москва, Россия"
       summary:
-        en: "Sber Tech develops Platform V, a large corporate platform. I worked on a heavily modified Istio fork and adjacent infrastructure components for service-mesh control, policy enforcement, and platform integration."
-        ru: "Сбер Тех развивает Platform V, крупную корпоративную платформу. Я работал с сильно модифицированным форком Istio и смежными инфраструктурными компонентами для управления service mesh, контроля политик и платформенной интеграции."
+        en: >-
+          Sber Tech develops Platform V, a large corporate platform. I worked on a heavily modified Istio fork and adjacent infrastructure components for service-mesh control, policy enforcement, and platform integration in the Service Mesh & Platform Infrastructure team. The project itself was a platform layer for routing, policy, and control-plane/data-plane management across Kubernetes environments inside the ecosystem.
+        ru: >-
+          Сбер Тех развивает Platform V, крупную корпоративную платформу. Я работал с сильно модифицированным форком Istio и смежными инфраструктурными компонентами для управления service mesh, контроля политик и платформенной интеграции в команде Service Mesh & Platform Infrastructure. Сам проект был платформенным слоем для маршрутизации, политик и управления связями control plane/data plane в Kubernetes-окружениях внутри экосистемы.
       highlights:
         - en: "Restored broken automated testing in a heavily modified Istio fork, returning unit tests to the daily engineering process and raising coverage to 80%."
           ru: "Восстановил сломанное автотестирование в сильно модифицированном форке Istio, вернув юнит-тесты в ежедневный инженерный процесс и подняв покрытие до 80%."
@@ -227,8 +236,10 @@ experience:
         en: "Remote"
         ru: "Удаленно"
       summary:
-        en: "A part-time project focused on mentorship, interview preparation, and growth of backend candidates."
-        ru: "Проект неполной занятости в области менторства, подготовки к интервью и роста backend-кандидатов."
+        en: >-
+          A part-time project focused on mentorship, interview preparation, and growth of backend candidates. In practice, it is a hands-on educational service built around individual preparation tracks and mock interviews for engineers who want stronger fundamentals, clearer system-design thinking, and better performance in commercial hiring loops.
+        ru: >-
+          Проект неполной занятости в области менторства, подготовки к интервью и роста backend-кандидатов. На практике это прикладной образовательный сервис, построенный вокруг индивидуальных треков подготовки и пробных интервью для инженеров, которым нужны более сильная база, более ясное системное мышление и лучший результат в коммерческих процессах найма.
       highlights:
         - en: "Conduct mock interviews and mentor candidates on backend fundamentals, system design, technical communication, and answer structure."
           ru: "Провожу пробные собеседования и менторю кандидатов по backend-базе, проектированию систем, технической коммуникации и структуре ответов."
@@ -242,15 +253,17 @@ experience:
       url: "https://lukyanov.tech"
     - <<: *icon_company_magnus
       company: "Magnus Tech"
-      role: "Backend Engineer"
+      role: "Software Engineer"
       startDate: "2023-03"
       endDate: "2024-01"
       location:
         en: "Remote"
         ru: "Удаленно"
       summary:
-        en: "Magnus Tech is a custom development company. I worked on a pricing-control platform for the Bristol retail chain that combined store data, employee actions, ML pricing recommendations, and photo confirmation into one operational system."
-        ru: "Magnus Tech - компания заказной разработки. Я работал над платформой контроля цен для сети «Бристоль», которая объединяла данные магазинов, действия сотрудников, ML-рекомендации по ценам и фотоподтверждения в единую операционную систему."
+        en: >-
+          Magnus Tech is a custom development company. I worked on a pricing-control platform for the Bristol shop retail chain that combines store data, employee actions, ML pricing recommendations, and photo confirmation into one operational system. The product was used by operational teams to form price, review store evidence, and coordinate corrective actions across a large retail network.
+        ru: >-
+          Magnus Tech - компания заказной разработки. Я работал над платформой контроля цен для сети магазинов «Бристоль», которая объединяет данные магазинов, действия сотрудников, ML-рекомендации по ценам и фотоподтверждения в единую операционную систему. Продукт использовался операционными командами для формирования цен, проверки подтверждений из магазинов и координации корректирующих действий по большой розничной сети.
       highlights:
         - en: "Developed Go backend services from scratch for the pricing platform and integrated store data, product information, ML recommendations, and employee actions into a unified backend flow."
           ru: "С нуля разрабатывал Go backend-сервисы для платформы ценообразования и интегрировал данные магазинов, продуктовую информацию, ML-рекомендации и действия сотрудников в единый backend-поток."
@@ -280,8 +293,10 @@ experience:
         en: "Moscow, Russia"
         ru: "Москва, Россия"
       summary:
-        en: "Exnode develops crypto exchange, B2B payment, and P2P trading products."
-        ru: "Exnode развивает продукты криптобиржи, B2B-платежей и P2P-обмена."
+        en: >-
+          Exnode develops crypto exchange, B2B payment, and P2P trading products. I worked on backend parts of transactional flows where payments, exchange operations, and reporting had to stay consistent, fast and exact under real business load.
+        ru: >-
+          Exnode развивает продукты криптобиржи, B2B-платежей и P2P-обмена. Я работал над backend-частями транзакционных сценариев, где платежи, обменные операции, и отчетность должны были оставаться консистентными, быстрыми и точными под реальной бизнес-нагрузкой.
       highlights:
         - en: "Split a large monolithic backend into smaller services and replaced part of internal REST communication with gRPC to reduce latency and simplify service boundaries."
           ru: "Разделил большой монолитный backend на более мелкие сервисы и заменил часть внутреннего REST-взаимодействия на gRPC, чтобы снизить задержку и упростить границы сервисов."
@@ -305,15 +320,17 @@ experience:
       company:
         en: "Kaluga Power Supply Company"
         ru: "Калужская сбытовая компания"
-      role: "Backend Engineer"
+      role: "GoLang Developer"
       startDate: "2021-10"
       endDate: "2022-03"
       location:
         en: "Remote"
         ru: "Удаленно"
       summary:
-        en: "An early backend role in utility payment systems, customer portals, and administrative services."
-        ru: "Ранняя backend-роль в системах коммунальных платежей, клиентских кабинетов и административных сервисов."
+        en: >-
+          A customer portal and internal administrative system for personal accounts, billing, payments, and property-management operations.
+        ru: >-
+          Клиентский портал и внутренняя административная система для лицевых счетов, биллинга, платежей и операционных сценариев управления теплообслуживания объектов.
       highlights:
         - en: "Developed and launched the core backend architecture for a customer portal and administrative system with integrations to 1C, payments, dashboards, and web/mobile clients."
           ru: "Разработал и запустил основную backend-архитектуру клиентского портала и административной системы с интеграциями в 1С, платежи, дашборды и веб/мобильные клиенты."
@@ -339,8 +356,10 @@ experience:
         en: "Lipetsk, Russia"
         ru: "Липецк, Россия"
       summary:
-        en: "My first commercial backend role in Java, focused on public digital and monitoring systems."
-        ru: "Моя первая коммерческая backend-роль на Java, связанная с государственными цифровыми и мониторинговыми системами."
+        en: >-
+          The projects were regional digital services and monitoring tools that supported government workflows and citizen-facing operational reporting.
+        ru: >-
+          Проекты представляли собой региональные цифровые сервисы и инструменты мониторинга, которые поддерживали государственные процессы и операционную отчетность для сценариев, связанных с гражданами.
       highlights:
         - en: "Contributed to backend services for regional digital products and monitoring systems in an environment with a large amount of legacy systems."
           ru: "Участвовал в разработке backend-сервисов для региональных цифровых продуктов и систем мониторинга в окружении с большим количеством легаси-систем."
@@ -358,8 +377,12 @@ education:
   subtitle:
     en: "Formal education and current degree track."
     ru: "Формальное образование и текущая степень."
+  institutionSiteLabel:
+    en: "University site"
+    ru: "Сайт университета"
   items:
-    - institution:
+    - <<: *icon_company_vstu
+      institution:
         en: "Voronezh State Technical University"
         ru: "Воронежский государственный технический университет"
       degree:
@@ -367,7 +390,9 @@ education:
         ru: "Бакалавриат, интеллектуальные автоматизированные системы (заочно)"
       startDate: "2025"
       endDate: "2030"
-    - institution:
+      url: "https://cchgeu.ru/"
+    - <<: *icon_company_vstu
+      institution:
         en: "Voronezh State Technical University"
         ru: "Воронежский государственный технический университет"
       degree:
@@ -375,6 +400,7 @@ education:
         ru: "СПО, информационные технологии и программирование"
       startDate: "2021"
       endDate: "2025"
+      url: "https://cchgeu.ru/"
 
 strengths:
   title:

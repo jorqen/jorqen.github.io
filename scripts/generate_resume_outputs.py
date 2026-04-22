@@ -317,12 +317,20 @@ def company_icon_path(item: dict[str, Any], build_dir: Path) -> Path | None:
     return resolve_image(item.get("companyIcon") or item.get("companyIconDark"), build_dir, 40)
 
 
+def institution_icon_path(item: dict[str, Any], build_dir: Path) -> Path | None:
+    return resolve_image(item.get("institutionIcon") or item.get("institutionIconDark"), build_dir, 40)
+
+
 def download_section_title(lang: str, key: str) -> str:
     return DOWNLOAD_SECTION_TITLES[lang][key]
 
 
 def experience_header_text(item: dict[str, Any]) -> str:
     return f"{item['role']} ({item['location']}, {item['period']}, {item['duration']})"
+
+
+def education_header_text(item: dict[str, Any]) -> str:
+    return f"{item['degree']} ({item['period']})"
 
 
 def skill_group_segments(groups: list[dict[str, Any]]) -> list[str]:
@@ -437,14 +445,25 @@ def language_content(source: dict[str, Any], lang: str) -> dict[str, Any]:
     experience["items"] = experience_items
 
     education = localized_tree(source["education"], lang)
-    education["items"] = [
-        {
+    education_items = []
+    optional_education_fields = (
+        ("institutionIcon", "icon"),
+        ("institutionIconDark", "iconDark"),
+        ("institutionUrl", "url"),
+    )
+    for item in education["items"]:
+        output_item = {
             "institution": item["institution"],
             "degree": item["degree"],
             "period": format_education_period(item, labels, month_names),
         }
-        for item in education["items"]
-    ]
+        output_item.update({
+            output_key: item[source_key]
+            for output_key, source_key in optional_education_fields
+            if source_key in item
+        })
+        education_items.append(output_item)
+    education["items"] = education_items
     strengths = localized_tree(source["strengths"], lang)
 
     resume = {
@@ -564,7 +583,10 @@ def generate_txt(data: dict[str, Any], lang: str, output_path: Path) -> None:
     lines.append("-" * len(download_section_title(lang, "education")))
     for item in content["education"]["items"]:
         add_wrapped(lines)
-        lines.append(f"{item['institution']} | {item['degree']} ({item['period']})")
+        lines.append(f"{item['institution']} | {education_header_text(item)}")
+        education_site_label = content["education"].get("institutionSiteLabel")
+        if education_site_label and item.get("institutionUrl"):
+            lines.append(f"{education_site_label}: {item['institutionUrl']}")
 
     add_wrapped(lines)
     lines.append(download_section_title(lang, "skills"))
@@ -885,8 +907,15 @@ def generate_docx(data: dict[str, Any], lang: str, output_path: Path, build_dir:
     document.add_paragraph(download_section_title(lang, "education"), style="ResumeSection")
     for item in content["education"]["items"]:
         paragraph = document.add_paragraph(style="ResumeBody")
-        paragraph.add_run(item["institution"]).bold = True
-        paragraph.add_run(f" | {item['degree']} ({item['period']})")
+        icon_path = institution_icon_path(item, build_dir / "institution-icons")
+        if icon_path:
+            paragraph.add_run().add_picture(str(icon_path), width=Inches(0.12))
+            paragraph.add_run(" ")
+        if item.get("institutionUrl"):
+            add_hyperlink(paragraph, item["institution"], item["institutionUrl"], style_colors["accent"], bold=True)
+        else:
+            paragraph.add_run(item["institution"]).bold = True
+        paragraph.add_run(f" | {education_header_text(item)}")
 
     document.add_paragraph(download_section_title(lang, "skills"), style="ResumeSection")
     skills_paragraph = document.add_paragraph(style="ResumeBody")
@@ -1185,8 +1214,14 @@ def generate_pdf(data: dict[str, Any], lang: str, output_path: Path, build_dir: 
 
     pdf_section(story, download_section_title(lang, "education"), styles)
     for item in content["education"]["items"]:
+        icon_markup = pdf_icon_markup(institution_icon_path(item, build_dir / "institution-icons"), 10)
+        institution_text = (
+            pdf_link(item["institution"], item["institutionUrl"], style_colors["accent"])
+            if item.get("institutionUrl")
+            else f"<b>{pdf_text(item['institution'])}</b>"
+        )
         story.append(pdf_markup(
-            f"<b>{pdf_text(item['institution'])}</b> | {pdf_text(item['degree'])} ({pdf_text(item['period'])})",
+            f"{icon_markup} {institution_text} | {pdf_text(education_header_text(item))}".strip(),
             styles["body"],
         ))
 

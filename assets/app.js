@@ -425,7 +425,7 @@ function renderExperience(content, theme) {
   });
 }
 
-function renderEducation(content) {
+function renderEducation(content, theme) {
   const container = document.getElementById("education-list");
   if (!container) {
     return;
@@ -436,8 +436,57 @@ function renderEducation(content) {
     const card = document.createElement("article");
     card.className = "education-item";
 
+    const institutionRow = document.createElement("div");
+    institutionRow.className = "timeline-company-row";
+
     const institution = document.createElement("h3");
-    institution.textContent = item.institution;
+    institution.className = "education-heading timeline-company-main";
+
+    const institutionIconPath =
+      theme === "dark" && item.institutionIconDark ? item.institutionIconDark : item.institutionIcon;
+    if (institutionIconPath) {
+      const institutionIcon = document.createElement("img");
+      institutionIcon.className = "company-icon";
+      institutionIcon.alt = `${item.institution} icon`;
+      institutionIcon.src = institutionIconPath;
+      institution.append(institutionIcon);
+    }
+
+    let institutionLink = null;
+    if (item.institutionUrl) {
+      institutionLink = document.createElement("a");
+      institutionLink.className = "company-link";
+      institutionLink.href = item.institutionUrl;
+      institutionLink.target = "_blank";
+      institutionLink.rel = "noopener noreferrer";
+      institutionLink.textContent = item.institution;
+    } else {
+      institutionLink = document.createElement("span");
+      institutionLink.className = "company-link";
+      institutionLink.textContent = item.institution;
+    }
+
+    institution.append(institutionLink);
+    institutionRow.append(institution);
+
+    if (item.institutionUrl) {
+      const institutionSiteLink = document.createElement("a");
+      institutionSiteLink.className = "company-site-link";
+      institutionSiteLink.href = item.institutionUrl;
+      institutionSiteLink.target = "_blank";
+      institutionSiteLink.rel = "noopener noreferrer";
+
+      const extIcon = document.createElement("img");
+      extIcon.src = getThemedIcon("external-link", theme);
+      extIcon.alt = "";
+      extIcon.setAttribute("aria-hidden", "true");
+
+      const extLabel = document.createElement("span");
+      extLabel.textContent = content.institutionSiteLabel || "University site";
+
+      institutionSiteLink.append(extIcon, extLabel);
+      institutionRow.append(institutionSiteLink);
+    }
 
     const degree = document.createElement("p");
     degree.className = "education-degree";
@@ -447,7 +496,7 @@ function renderEducation(content) {
     meta.className = "education-meta";
     meta.textContent = item.period;
 
-    card.append(institution, degree, meta);
+    card.append(institutionRow, degree, meta);
     container.append(card);
   });
 }
@@ -736,7 +785,7 @@ function renderLanguage(lang) {
 
   setText("education-title", data.education.title);
   setText("education-subtitle", data.education.subtitle);
-  renderEducation(data.education);
+  renderEducation(data.education, theme);
 
   setText("strengths-title", data.strengths.title);
   setText("strengths-subtitle", data.strengths.subtitle);
