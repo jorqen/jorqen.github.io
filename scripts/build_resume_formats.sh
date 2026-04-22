@@ -23,7 +23,7 @@ if ! has_required_python_deps "$PYTHON_BIN"; then
     cat >&2 <<'EOF'
 Missing Python dependencies for resume generation.
 Install them with:
-  python3 -m pip install python-docx reportlab pillow pyyaml
+  python3 -m pip install python-docx reportlab pyyaml
 EOF
     exit 1
   fi

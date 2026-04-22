@@ -6,6 +6,7 @@ from __future__ import annotations
 import argparse
 from calendar import monthrange
 from datetime import date
+import hashlib
 import html
 import json
 import shutil
@@ -14,6 +15,7 @@ import sys
 import textwrap
 from pathlib import Path
 from typing import Any
+from urllib.parse import urlsplit
 
 try:
     import yaml
@@ -25,8 +27,6 @@ except ImportError as exc:  # pragma: no cover - handled at runtime for local se
 try:
     from docx import Document
     from docx.enum.style import WD_STYLE_TYPE
-    from docx.enum.text import WD_BREAK
-    from docx.enum.text import WD_ALIGN_PARAGRAPH
     from docx.oxml import OxmlElement
     from docx.oxml.ns import qn
     from docx.shared import Inches, Mm, Pt, RGBColor
@@ -37,19 +37,139 @@ except ImportError as exc:  # pragma: no cover - handled at runtime for local se
 
 try:
     from reportlab.lib import colors
-    from reportlab.lib.enums import TA_CENTER
     from reportlab.lib.pagesizes import A4
     from reportlab.lib.styles import ParagraphStyle, getSampleStyleSheet
     from reportlab.lib.units import inch
     from reportlab.pdfbase import pdfmetrics
     from reportlab.pdfbase.ttfonts import TTFont
-    from reportlab.platypus import Image, Paragraph, SimpleDocTemplate, Spacer, Table, TableStyle
+    from reportlab.platypus import Paragraph, SimpleDocTemplate, Spacer
 except ImportError as exc:  # pragma: no cover - handled at runtime for local setup clarity.
     raise SystemExit(
         "Missing PDF dependencies. Install reportlab or run through scripts/build_resume_formats.sh."
     ) from exc
 
 ROOT = Path(__file__).resolve().parents[1]
+
+MONTH_NAMES = {
+    "en": ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+    "ru": ["Янв", "Фев", "Мар", "Апр", "Май", "Июн", "Июл", "Авг", "Сен", "Окт", "Ноя", "Дек"],
+}
+
+DOWNLOAD_STYLES = {
+    "colors": {
+        "accent": "1D5FD1",
+        "accentMuted": "EAF2FF",
+        "surface": "F6F9FD",
+        "surfaceAlt": "EEF4FB",
+        "text": "0F1F36",
+        "muted": "526581",
+        "line": "DBE4F2",
+        "white": "FFFFFF",
+    },
+    "typography": {
+        "kicker": {"fontSize": 8.5, "lineHeight": 10},
+        "title": {"fontSize": 24, "lineHeight": 28},
+        "headline": {"fontSize": 10.8, "lineHeight": 13},
+        "contact": {"fontSize": 8.2, "lineHeight": 10.2},
+        "summary": {"fontSize": 9.2, "lineHeight": 12.1},
+        "factLabel": {"fontSize": 7.2, "lineHeight": 8.6},
+        "factValue": {"fontSize": 8.6, "lineHeight": 10.8},
+        "section": {"fontSize": 11.3, "lineHeight": 13.3},
+        "sectionBody": {"fontSize": 8.5, "lineHeight": 10.8},
+        "company": {"fontSize": 10.4, "lineHeight": 12.3},
+        "meta": {"fontSize": 8.7, "lineHeight": 10.8},
+        "body": {"fontSize": 9, "lineHeight": 11.8},
+        "bullet": {"fontSize": 8.8, "lineHeight": 11},
+        "cardTitle": {"fontSize": 8.8, "lineHeight": 10.8},
+        "cardBody": {"fontSize": 8.4, "lineHeight": 10.6},
+    },
+}
+
+SITE_UI = {
+    "metaDescription": {
+        "en": "Matvey Sizov - Backend Developer / Software Engineer. Go, distributed systems, low-latency backend development, and production reliability in product and platform teams.",
+        "ru": "Матвей Сизов - Backend Developer / Software Engineer. Go, распределенные системы, backend с низкой задержкой и надежность production в продуктовых и платформенных командах.",
+    },
+    "navResume": {
+        "en": "Resume",
+        "ru": "Резюме",
+    },
+    "langSwitcherLabel": {
+        "en": "Language switcher",
+        "ru": "Переключение языка",
+    },
+    "theme": {
+        "toDark": {
+            "en": "Dark theme",
+            "ru": "Тёмная тема",
+        },
+        "toLight": {
+            "en": "Light theme",
+            "ru": "Светлая тема",
+        },
+        "switcherLabel": {
+            "en": "Theme switcher",
+            "ru": "Переключение темы",
+        },
+    },
+    "resumeDownloads": {
+        "title": {
+            "en": "Download resume",
+            "ru": "Скачать резюме",
+        },
+        "labels": {
+            "pdf": {
+                "en": "For sharing and printing",
+                "ru": "Для отправки и печати",
+            },
+            "docx": {
+                "en": "Editable source",
+                "ru": "Редактируемый источник",
+            },
+            "txt": {
+                "en": "Text version",
+                "ru": "Текстовая версия",
+            },
+        },
+    },
+    "lightbox": {
+        "openPhoto": {
+            "en": "Open photo",
+            "ru": "Открыть фото",
+        },
+        "close": {
+            "en": "Close photo viewer",
+            "ru": "Закрыть просмотр фото",
+        },
+        "previous": {
+            "en": "Previous photo",
+            "ru": "Предыдущее фото",
+        },
+        "next": {
+            "en": "Next photo",
+            "ru": "Следующее фото",
+        },
+    },
+    "footer": {
+        "en": "© {year} {name}. Personal website for recruiters and hiring managers.",
+        "ru": "© {year} {name}. Сайт-визитка для рекрутеров и менеджеров по найму.",
+    },
+}
+
+DOWNLOAD_SECTION_TITLES = {
+    "en": {
+        "experience": "PROFESSIONAL EXPERIENCE",
+        "education": "EDUCATION",
+        "skills": "PROGRAMMING SKILLS",
+    },
+    "ru": {
+        "experience": "ПРОФЕССИОНАЛЬНЫЙ ОПЫТ",
+        "education": "ОБРАЗОВАНИЕ",
+        "skills": "ТЕХНИЧЕСКИЕ НАВЫКИ",
+    },
+}
+
+HERO_CONTACT_KEYS = ("linkedin", "github", "telegram")
 
 
 def localized_tree(value: Any, lang: str) -> Any:
@@ -79,14 +199,134 @@ def rgb_color(hex_value: str) -> RGBColor:
     )
 
 
-def download_styles(source: dict[str, Any]) -> dict[str, Any]:
+def download_styles() -> dict[str, Any]:
     return {
         "colors": {
             key: hex_color(value)
-            for key, value in source["downloadStyles"]["colors"].items()
+            for key, value in DOWNLOAD_STYLES["colors"].items()
         },
-        "typography": source["downloadStyles"]["typography"],
+        "typography": {
+            key: value.copy()
+            for key, value in DOWNLOAD_STYLES["typography"].items()
+        },
     }
+
+
+def parse_resume_date(value: str, *, upper_bound: bool) -> date:
+    parts = value.split("-")
+    year = int(parts[0])
+    if len(parts) == 1:
+        month = 12 if upper_bound else 1
+        day = 31 if upper_bound else 1
+        return date(year, month, day)
+    month = int(parts[1])
+    day = monthrange(year, month)[1] if upper_bound else 1
+    return date(year, month, day)
+
+
+def months_between(start_date: date, end_date: date) -> int:
+    months = (end_date.year - start_date.year) * 12 + (end_date.month - start_date.month)
+    if end_date.day < start_date.day:
+        months -= 1
+    return max(months, 0)
+
+
+def format_duration_label(total_months: int, lang: str) -> str:
+    years, months = divmod(total_months, 12)
+    parts: list[str] = []
+    if years:
+        if lang == "ru":
+            parts.append(f"{years} г.")
+        else:
+            parts.append(f"{years} {'yr' if years == 1 else 'yrs'}")
+    if months or not parts:
+        if lang == "ru":
+            parts.append(f"{months} мес.")
+        else:
+            parts.append(f"{months} {'mo' if months == 1 else 'mos'}")
+    return " ".join(parts)
+
+
+def experience_duration(item: dict[str, Any], lang: str) -> str:
+    end_date = parse_resume_date(item["endDate"], upper_bound=True) if item.get("endDate") else date.today()
+    start_date = parse_resume_date(item["startDate"], upper_bound=False)
+    return format_duration_label(months_between(start_date, end_date), lang)
+
+
+def contact_value(contact: dict[str, str]) -> str:
+    return str(contact["value"]).strip()
+
+
+def is_web_url(value: str) -> bool:
+    parsed = urlsplit(value)
+    return parsed.scheme in {"http", "https"} and bool(parsed.netloc)
+
+
+def contact_href(contact: dict[str, str]) -> str | None:
+    value = contact_value(contact)
+    return value if is_web_url(value) else None
+
+
+def contact_link_text(contact: dict[str, str], *, shorten_web_urls: bool = True) -> str:
+    value = contact_value(contact)
+    if shorten_web_urls and is_web_url(value):
+        return value.removeprefix("https://").removeprefix("http://")
+    return value
+
+
+def convert_svg_to_png(source: Path, build_dir: Path, size: int = 48) -> Path | None:
+    rsvg = shutil.which("rsvg-convert")
+    if not rsvg:
+        return None
+    build_dir.mkdir(parents=True, exist_ok=True)
+    relative_source = source.relative_to(ROOT)
+    cache_key = hashlib.sha1(str(relative_source).encode("utf-8")).hexdigest()[:10]
+    output = build_dir / f"{source.stem}-{cache_key}-{size}.png"
+    if output.exists() and output.stat().st_mtime >= source.stat().st_mtime:
+        return output
+    subprocess.run(
+        [rsvg, "-w", str(size), "-h", str(size), "-o", str(output), str(source)],
+        check=True,
+        stdout=subprocess.DEVNULL,
+        stderr=subprocess.DEVNULL,
+    )
+    return output
+
+
+def resolve_image(path_value: str | None, build_dir: Path, size: int = 48) -> Path | None:
+    if not path_value:
+        return None
+    source = ROOT / path_value
+    if not source.exists():
+        return None
+    if source.suffix.lower() == ".svg":
+        return convert_svg_to_png(source, build_dir, size)
+    if source.suffix.lower() in {".png", ".jpg", ".jpeg"}:
+        return source
+    return None
+
+
+def contact_icon_path(contact_key: str, contact: dict[str, str], build_dir: Path) -> Path | None:
+    icon_path = contact.get("icon") or contact.get("iconDark")
+    if not icon_path and contact_key == "website":
+        icon_path = "assets/icons/website.svg"
+    return resolve_image(icon_path, build_dir, 32)
+
+
+def company_icon_path(item: dict[str, Any], build_dir: Path) -> Path | None:
+    return resolve_image(item.get("companyIcon") or item.get("companyIconDark"), build_dir, 40)
+
+
+def download_section_title(lang: str, key: str) -> str:
+    return DOWNLOAD_SECTION_TITLES[lang][key]
+
+
+def experience_header_text(item: dict[str, Any]) -> str:
+    return f"{item['role']} ({item['location']}, {item['period']}, {item['duration']})"
+
+
+def skill_group_segments(groups: list[dict[str, Any]]) -> list[str]:
+    return [f"{group['title']}: {', '.join(group['items'])}" for group in groups]
 
 
 def format_resume_date(value: str, month_names: list[str]) -> str:
@@ -105,12 +345,9 @@ def format_period(item: dict[str, Any], labels: dict[str, str], month_names: lis
 
 
 def resume_date_upper_bound(value: str | None) -> date | None:
-    parts = value.split("-")
-    year = int(parts[0])
-    if len(parts) == 1:
-        return date(year, 12, 31)
-    month = int(parts[1])
-    return date(year, month, monthrange(year, month)[1])
+    if value is None:
+        return None
+    return parse_resume_date(value, upper_bound=True)
 
 
 def is_expected_education(item: dict[str, Any]) -> bool:
@@ -132,10 +369,42 @@ def download_file_names(file_base_name: str) -> dict[str, str]:
     }
 
 
+def resume_file_base_name(source: dict[str, Any]) -> str:
+    english_name = localized_tree(source["person"]["name"], "en")
+    return "_".join(english_name.split())
+
+
+def site_meta(person: dict[str, Any], lang: str) -> dict[str, str]:
+    return {
+        "title": f"{person['name']} | {person['headline']}",
+        "description": SITE_UI["metaDescription"][lang],
+    }
+
+
+def site_nav(
+    labels: dict[str, str],
+    experience: dict[str, Any],
+    education: dict[str, Any],
+    strengths: dict[str, Any],
+    lang: str,
+) -> dict[str, str]:
+    return {
+        "resume": SITE_UI["navResume"][lang],
+        "experience": experience["title"],
+        "education": education["title"],
+        "strengths": strengths["title"],
+        "skills": labels["stack"],
+    }
+
+
+def site_footer(person: dict[str, Any], lang: str) -> str:
+    return SITE_UI["footer"][lang].format(year="{year}", name=person["name"])
+
+
 def language_content(source: dict[str, Any], lang: str) -> dict[str, Any]:
-    site = localized_tree(source["site"], lang)
+    person = localized_tree(source["person"], lang)
     labels = localized_tree(source["resumeLabels"], lang)
-    month_names = source["dateFormats"]["monthNames"][lang]
+    month_names = MONTH_NAMES[lang]
 
     experience = localized_tree(source["experience"], lang)
     experience_items = []
@@ -144,11 +413,16 @@ def language_content(source: dict[str, Any], lang: str) -> dict[str, Any]:
         ("companyIconDark", "iconDark"),
         ("companyUrl", "url"),
     )
-    for item in experience["items"]:
+    for item in sorted(
+        experience["items"],
+        key=lambda experience_item: resume_date_upper_bound(experience_item["startDate"]),
+        reverse=True,
+    ):
         output_item = {
             "company": item["company"],
             "role": item["role"],
             "period": format_period(item, labels, month_names),
+            "duration": experience_duration(item, lang),
             "location": item["location"],
             "intro": item["summary"],
             "bullets": item["highlights"],
@@ -171,8 +445,13 @@ def language_content(source: dict[str, Any], lang: str) -> dict[str, Any]:
         }
         for item in education["items"]
     ]
+    strengths = localized_tree(source["strengths"], lang)
 
-    resume = site["resumeDownloads"]
+    resume = {
+        "fileBaseName": resume_file_base_name(source),
+        "title": SITE_UI["resumeDownloads"]["title"][lang],
+        "labels": localized_tree(SITE_UI["resumeDownloads"]["labels"], lang),
+    }
     file_names = download_file_names(resume["fileBaseName"])
     resume["files"] = {
         extension: f"resume/{lang}/{name}"
@@ -181,21 +460,28 @@ def language_content(source: dict[str, Any], lang: str) -> dict[str, Any]:
     resume["downloadNames"] = file_names
 
     return {
-        "meta": site["meta"],
-        "brand": site["brand"],
-        "nav": site["nav"],
-        "langSwitcherLabel": site["langSwitcherLabel"],
-        "theme": site["theme"],
-        "hero": site["hero"],
+        "meta": site_meta(person, lang),
+        "brand": person["name"],
+        "nav": site_nav(labels, experience, education, strengths, lang),
+        "langSwitcherLabel": SITE_UI["langSwitcherLabel"][lang],
+        "theme": localized_tree(SITE_UI["theme"], lang),
+        "hero": {
+            "kicker": person["headline"],
+            "name": person["name"],
+            "role": person["role"],
+            "summary": person["summary"],
+            "photo": person["photo"],
+            "facts": person["facts"],
+        },
         "resume": resume,
         "experience": experience,
         "education": education,
-        "strengths": localized_tree(source["strengths"], lang),
+        "strengths": strengths,
         "skills": localized_tree(source["skills"], lang),
         "preferences": localized_tree(source["preferences"], lang),
         "gallery": localized_tree(source["gallery"], lang),
-        "lightbox": site["lightbox"],
-        "footer": site["footer"],
+        "lightbox": localized_tree(SITE_UI["lightbox"], lang),
+        "footer": site_footer(person, lang),
     }
 
 
@@ -215,7 +501,7 @@ def build_resume_data(source: dict[str, Any]) -> dict[str, Any]:
             "languages": languages,
         },
         "contactKeys": contact_keys,
-        "downloadStyles": download_styles(source),
+        "downloadStyles": download_styles(),
         "contacts": contacts,
         "labels": labels,
         "content": content,
@@ -231,7 +517,7 @@ def contact_parts(data: dict[str, Any], lang: str) -> list[str]:
     parts = []
     for key in data["contactKeys"]:
         contact = data["contacts"][key][lang]
-        parts.append(f"{contact['label']}: {contact['url']}")
+        parts.append(contact_link_text(contact, shorten_web_urls=False))
     return parts
 
 
@@ -250,64 +536,41 @@ def add_wrapped(lines: list[str], text: str = "", width: int = 100) -> None:
 
 def generate_txt(data: dict[str, Any], lang: str, output_path: Path) -> None:
     content = data["content"][lang]
-    labels = data["labels"][lang]
     lines: list[str] = []
 
     lines.append(content["hero"]["name"])
     lines.append("=" * len(content["hero"]["name"]))
-    lines.append(f"{content['hero']['facts'][0]['value']} | {content['hero']['facts'][3]['value']}")
     lines.append(" | ".join(contact_parts(data, lang)))
     add_wrapped(lines)
     add_wrapped(lines, content["hero"]["role"])
-    add_wrapped(lines, content["hero"]["summary"])
 
     add_wrapped(lines)
-    lines.append(content["experience"]["title"].upper())
-    lines.append("-" * len(content["experience"]["title"]))
+    lines.append(download_section_title(lang, "experience"))
+    lines.append("-" * len(download_section_title(lang, "experience")))
     for item in content["experience"]["items"]:
         add_wrapped(lines)
-        lines.append(f"{item['company']} | {item['role']}")
+        lines.append(f"{item['company']} | {experience_header_text(item)}")
         if item.get("companyUrl"):
             lines.append(f"{content['experience']['companySiteLabel']}: {item['companyUrl']}")
-        lines.append(f"{item['period']} | {item['location']}")
         add_wrapped(lines, item["intro"])
-        lines.append(f"{labels['achievements']}:")
         for bullet in item["bullets"]:
             for index, wrapped in enumerate(wrap_line(bullet, 96)):
                 prefix = "- " if index == 0 else "  "
                 lines.append(f"{prefix}{wrapped}")
-        lines.append(f"{labels['stack']}: {', '.join(item['stack'])}")
+        lines.append(f"{data['labels'][lang]['stack']}: {', '.join(item['stack'])}")
 
     add_wrapped(lines)
-    lines.append(content["education"]["title"].upper())
-    lines.append("-" * len(content["education"]["title"]))
+    lines.append(download_section_title(lang, "education"))
+    lines.append("-" * len(download_section_title(lang, "education")))
     for item in content["education"]["items"]:
         add_wrapped(lines)
-        lines.append(item["institution"])
-        add_wrapped(lines, item["degree"])
-        lines.append(item["period"])
+        lines.append(f"{item['institution']} | {item['degree']} ({item['period']})")
 
     add_wrapped(lines)
-    lines.append(content["strengths"]["title"].upper())
-    lines.append("-" * len(content["strengths"]["title"]))
-    for card in content["strengths"]["cards"]:
-        add_wrapped(lines)
-        lines.append(card["title"])
-        add_wrapped(lines, card["body"])
-
-    add_wrapped(lines)
-    lines.append(content["skills"]["title"].upper())
-    lines.append("-" * len(content["skills"]["title"]))
+    lines.append(download_section_title(lang, "skills"))
+    lines.append("-" * len(download_section_title(lang, "skills")))
     for group in content["skills"]["groups"]:
         lines.append(f"{group['title']}: {', '.join(group['items'])}")
-
-    add_wrapped(lines)
-    lines.append(content["preferences"]["title"].upper())
-    lines.append("-" * len(content["preferences"]["title"]))
-    for item in content["preferences"]["items"]:
-        for index, wrapped in enumerate(wrap_line(item, 96)):
-            prefix = "- " if index == 0 else "  "
-            lines.append(f"{prefix}{wrapped}")
 
     output_path.parent.mkdir(parents=True, exist_ok=True)
     output_path.write_text("\n".join(lines).rstrip() + "\n", encoding="utf-8")
@@ -386,20 +649,31 @@ def configure_docx(document: Document, download_style: dict[str, Any]) -> None:
     section = document.sections[0]
     section.page_width = Mm(210)
     section.page_height = Mm(297)
-    section.top_margin = Inches(0.55)
-    section.bottom_margin = Inches(0.55)
-    section.left_margin = Inches(0.62)
-    section.right_margin = Inches(0.62)
+    section.top_margin = Inches(0.48)
+    section.bottom_margin = Inches(0.48)
+    section.left_margin = Inches(0.56)
+    section.right_margin = Inches(0.56)
 
     font_name = "Arial"
     styles = document.styles
     normal = styles["Normal"]
     normal.font.name = font_name
-    normal.font.size = Pt(9.4)
+    normal._element.rPr.rFonts.set(qn("w:eastAsia"), font_name)  # noqa: SLF001
+    normal.font.size = Pt(9.2)
     normal.font.color.rgb = rgb_color(style_colors["text"])
-    normal.paragraph_format.space_after = Pt(5)
-    normal.paragraph_format.line_spacing = Pt(12.3)
+    normal.paragraph_format.space_after = Pt(0)
+    normal.paragraph_format.line_spacing = Pt(11.8)
 
+    configure_docx_paragraph_style(
+        styles,
+        "ResumeKicker",
+        font_name,
+        typography["kicker"]["fontSize"],
+        rgb_color(style_colors["accent"]),
+        bold=True,
+        line_spacing=typography["kicker"]["lineHeight"],
+        space_after=2,
+    )
     configure_docx_paragraph_style(
         styles,
         "ResumeTitle",
@@ -407,10 +681,20 @@ def configure_docx(document: Document, download_style: dict[str, Any]) -> None:
         typography["title"]["fontSize"],
         rgb_color(style_colors["text"]),
         bold=True,
-        alignment=WD_ALIGN_PARAGRAPH.CENTER,
         keep_with_next=True,
         line_spacing=typography["title"]["lineHeight"],
-        space_after=6,
+        space_after=2,
+    )
+    configure_docx_paragraph_style(
+        styles,
+        "ResumeHeadline",
+        font_name,
+        typography["headline"]["fontSize"],
+        rgb_color(style_colors["text"]),
+        bold=True,
+        keep_with_next=True,
+        line_spacing=typography["headline"]["lineHeight"],
+        space_after=3,
     )
     configure_docx_paragraph_style(
         styles,
@@ -418,18 +702,37 @@ def configure_docx(document: Document, download_style: dict[str, Any]) -> None:
         font_name,
         typography["contact"]["fontSize"],
         rgb_color(style_colors["muted"]),
-        alignment=WD_ALIGN_PARAGRAPH.CENTER,
         line_spacing=typography["contact"]["lineHeight"],
-        space_after=7,
+        space_after=3,
     )
     configure_docx_paragraph_style(
         styles,
-        "ResumeBody",
+        "ResumeSummary",
         font_name,
-        typography["body"]["fontSize"],
+        typography["summary"]["fontSize"],
         rgb_color(style_colors["text"]),
-        line_spacing=typography["body"]["lineHeight"],
-        space_after=5,
+        line_spacing=typography["summary"]["lineHeight"],
+        space_after=0,
+    )
+    configure_docx_paragraph_style(
+        styles,
+        "ResumeFactLabel",
+        font_name,
+        typography["factLabel"]["fontSize"],
+        rgb_color(style_colors["muted"]),
+        bold=True,
+        line_spacing=typography["factLabel"]["lineHeight"],
+        space_after=1,
+    )
+    configure_docx_paragraph_style(
+        styles,
+        "ResumeFactValue",
+        font_name,
+        typography["factValue"]["fontSize"],
+        rgb_color(style_colors["text"]),
+        bold=True,
+        line_spacing=typography["factValue"]["lineHeight"],
+        space_after=0,
     )
     configure_docx_paragraph_style(
         styles,
@@ -440,8 +743,17 @@ def configure_docx(document: Document, download_style: dict[str, Any]) -> None:
         bold=True,
         keep_with_next=True,
         line_spacing=typography["section"]["lineHeight"],
-        space_before=9,
-        space_after=5,
+        space_before=8,
+        space_after=2,
+    )
+    configure_docx_paragraph_style(
+        styles,
+        "ResumeSectionBody",
+        font_name,
+        typography["sectionBody"]["fontSize"],
+        rgb_color(style_colors["muted"]),
+        line_spacing=typography["sectionBody"]["lineHeight"],
+        space_after=4,
     )
     configure_docx_paragraph_style(
         styles,
@@ -452,7 +764,6 @@ def configure_docx(document: Document, download_style: dict[str, Any]) -> None:
         bold=True,
         keep_with_next=True,
         line_spacing=typography["company"]["lineHeight"],
-        space_before=4,
         space_after=2,
     )
     configure_docx_paragraph_style(
@@ -462,7 +773,16 @@ def configure_docx(document: Document, download_style: dict[str, Any]) -> None:
         typography["meta"]["fontSize"],
         rgb_color(style_colors["muted"]),
         line_spacing=typography["meta"]["lineHeight"],
-        space_after=4,
+        space_after=1,
+    )
+    configure_docx_paragraph_style(
+        styles,
+        "ResumeBody",
+        font_name,
+        typography["body"]["fontSize"],
+        rgb_color(style_colors["text"]),
+        line_spacing=typography["body"]["lineHeight"],
+        space_after=2,
     )
     configure_docx_paragraph_style(
         styles,
@@ -471,40 +791,61 @@ def configure_docx(document: Document, download_style: dict[str, Any]) -> None:
         typography["bullet"]["fontSize"],
         rgb_color(style_colors["text"]),
         line_spacing=typography["bullet"]["lineHeight"],
-        space_after=2.2,
-        left_indent=0.15,
-        first_line_indent=-0.1,
+        space_after=1,
+        left_indent=0.17,
+        first_line_indent=-0.11,
+    )
+    configure_docx_paragraph_style(
+        styles,
+        "ResumeCardTitle",
+        font_name,
+        typography["cardTitle"]["fontSize"],
+        rgb_color(style_colors["text"]),
+        bold=True,
+        keep_with_next=True,
+        line_spacing=typography["cardTitle"]["lineHeight"],
+        space_after=2,
+    )
+    configure_docx_paragraph_style(
+        styles,
+        "ResumeCardBody",
+        font_name,
+        typography["cardBody"]["fontSize"],
+        rgb_color(style_colors["text"]),
+        line_spacing=typography["cardBody"]["lineHeight"],
+        space_after=0,
+    )
+    configure_docx_paragraph_style(
+        styles,
+        "ResumeGap",
+        font_name,
+        1,
+        rgb_color(style_colors["white"]),
+        line_spacing=2,
+        space_after=0,
     )
 
 
-def convert_svg_to_png(source: Path, build_dir: Path, size: int = 96) -> Path | None:
-    rsvg = shutil.which("rsvg-convert")
-    if not rsvg:
-        return None
-    build_dir.mkdir(parents=True, exist_ok=True)
-    output = build_dir / f"{source.stem}-{size}.png"
-    if output.exists() and output.stat().st_mtime >= source.stat().st_mtime:
-        return output
-    subprocess.run(
-        [rsvg, "-w", str(size), "-h", str(size), "-o", str(output), str(source)],
-        check=True,
-        stdout=subprocess.DEVNULL,
-        stderr=subprocess.DEVNULL,
-    )
-    return output
-
-
-def resolve_image(path_value: str, build_dir: Path, size: int = 96) -> Path | None:
-    if not path_value:
-        return None
-    source = ROOT / path_value
-    if not source.exists():
-        return None
-    if source.suffix.lower() == ".svg":
-        return convert_svg_to_png(source, build_dir, size)
-    if source.suffix.lower() in {".png", ".jpg", ".jpeg"}:
-        return source
-    return None
+def docx_contact_line(
+    paragraph: Any,
+    data: dict[str, Any],
+    lang: str,
+    accent_color: str,
+    build_dir: Path,
+) -> None:
+    for index, key in enumerate(data["contactKeys"]):
+        contact = data["contacts"][key][lang]
+        if index:
+            paragraph.add_run("  |  ")
+        icon_path = contact_icon_path(key, contact, build_dir / "contact-icons")
+        if icon_path:
+            paragraph.add_run().add_picture(str(icon_path), width=Inches(0.11))
+            paragraph.add_run(" ")
+        href = contact_href(contact)
+        if href:
+            add_hyperlink(paragraph, contact_link_text(contact), href, accent_color)
+        else:
+            paragraph.add_run(contact_link_text(contact))
 
 
 def generate_docx(data: dict[str, Any], lang: str, output_path: Path, build_dir: Path) -> None:
@@ -517,62 +858,44 @@ def generate_docx(data: dict[str, Any], lang: str, output_path: Path, build_dir:
 
     document.add_paragraph(content["hero"]["name"], style="ResumeTitle")
     contact_paragraph = document.add_paragraph(style="ResumeContact")
-    contact_paragraph.add_run(f"{content['hero']['facts'][0]['value']} | {content['hero']['facts'][3]['value']}\n")
-    for index, key in enumerate(data["contactKeys"]):
-        contact = data["contacts"][key][lang]
-        if index:
-            contact_paragraph.add_run(" | ")
-        add_hyperlink(contact_paragraph, contact["label"], contact["url"], style_colors["accent"])
+    docx_contact_line(contact_paragraph, data, lang, style_colors["accent"], build_dir)
+    document.add_paragraph(content["hero"]["role"], style="ResumeHeadline")
 
-    document.add_paragraph(content["hero"]["role"], style="ResumeBody")
-    document.add_paragraph(content["hero"]["summary"], style="ResumeBody")
-
-    document.add_paragraph(content["experience"]["title"].upper(), style="ResumeSection")
+    document.add_paragraph(download_section_title(lang, "experience"), style="ResumeSection")
     for item in content["experience"]["items"]:
-        title = document.add_paragraph(style="ResumeCompany")
-        image_path = resolve_image(item.get("companyIconDark") or item.get("companyIcon", ""), build_dir / "icons", 96)
-        if image_path:
-            title.add_run().add_picture(str(image_path), width=Inches(0.16))
-            title.add_run(" ")
+        header = document.add_paragraph(style="ResumeCompany")
+        icon_path = company_icon_path(item, build_dir / "company-icons")
+        if icon_path:
+            header.add_run().add_picture(str(icon_path), width=Inches(0.12))
+            header.add_run(" ")
         if item.get("companyUrl"):
-            add_hyperlink(title, item["company"], item["companyUrl"], style_colors["accent"], bold=True)
+            add_hyperlink(header, item["company"], item["companyUrl"], style_colors["accent"], bold=True)
         else:
-            title.add_run(item["company"]).bold = True
+            company_run = header.add_run(item["company"])
+            company_run.bold = True
+        header.add_run(f" | {experience_header_text(item)}").bold = True
 
-        role = document.add_paragraph(style="ResumeMeta")
-        role.add_run(item["role"]).bold = True
-        role.add_run(f" | {item['period']} | {item['location']}")
         document.add_paragraph(item["intro"], style="ResumeBody")
-        document.add_paragraph(f"{labels['achievements']}:", style="ResumeBody").runs[0].bold = True
         for bullet in item["bullets"]:
             document.add_paragraph(f"• {bullet}", style="ResumeBullet")
         stack = document.add_paragraph(style="ResumeMeta")
         stack.add_run(f"{labels['stack']}: ").bold = True
         stack.add_run(", ".join(item["stack"]))
 
-    document.add_paragraph(content["education"]["title"].upper(), style="ResumeSection")
+    document.add_paragraph(download_section_title(lang, "education"), style="ResumeSection")
     for item in content["education"]["items"]:
         paragraph = document.add_paragraph(style="ResumeBody")
         paragraph.add_run(item["institution"]).bold = True
-        paragraph.add_run().add_break(WD_BREAK.LINE)
-        paragraph.add_run(item["degree"])
-        paragraph.add_run(f" | {item['period']}")
+        paragraph.add_run(f" | {item['degree']} ({item['period']})")
 
-    document.add_paragraph(content["strengths"]["title"].upper(), style="ResumeSection")
-    for card in content["strengths"]["cards"]:
-        paragraph = document.add_paragraph(style="ResumeBody")
-        paragraph.add_run(f"{card['title']}: ").bold = True
-        paragraph.add_run(card["body"])
-
-    document.add_paragraph(content["skills"]["title"].upper(), style="ResumeSection")
-    for group in content["skills"]["groups"]:
-        paragraph = document.add_paragraph(style="ResumeBody")
-        paragraph.add_run(f"{group['title']}: ").bold = True
-        paragraph.add_run(", ".join(group["items"]))
-
-    document.add_paragraph(content["preferences"]["title"].upper(), style="ResumeSection")
-    for item in content["preferences"]["items"]:
-        document.add_paragraph(f"• {item}", style="ResumeBullet")
+    document.add_paragraph(download_section_title(lang, "skills"), style="ResumeSection")
+    skills_paragraph = document.add_paragraph(style="ResumeBody")
+    for index, segment in enumerate(skill_group_segments(content["skills"]["groups"])):
+        if index:
+            skills_paragraph.add_run(" | ")
+        title, values = segment.split(": ", 1)
+        skills_paragraph.add_run(f"{title}: ").bold = True
+        skills_paragraph.add_run(values)
 
     output_path.parent.mkdir(parents=True, exist_ok=True)
     document.save(output_path)
@@ -600,27 +923,26 @@ def find_font(candidates: list[str]) -> Path | None:
 
 
 def register_pdf_fonts(lang: str) -> tuple[str, str]:
-    if lang == "en":
-        return "Helvetica", "Helvetica-Bold"
-
     regular = find_font([
-        "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",
         "/System/Library/Fonts/Supplemental/Arial.ttf",
         "/Library/Fonts/Arial.ttf",
         "/System/Library/Fonts/Supplemental/Arial Unicode.ttf",
         "/Library/Fonts/Arial Unicode.ttf",
+        "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",
     ])
     bold = find_font([
-        "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf",
         "/System/Library/Fonts/Supplemental/Arial Bold.ttf",
         "/Library/Fonts/Arial Bold.ttf",
+        "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf",
     ]) or regular
 
     if not regular:
         raise RuntimeError("Could not find a Unicode TrueType font for PDF generation.")
 
-    pdfmetrics.registerFont(TTFont("ResumeRegular", str(regular)))
-    pdfmetrics.registerFont(TTFont("ResumeBold", str(bold)))
+    if "ResumeRegular" not in pdfmetrics.getRegisteredFontNames():
+        pdfmetrics.registerFont(TTFont("ResumeRegular", str(regular)))
+    if "ResumeBold" not in pdfmetrics.getRegisteredFontNames():
+        pdfmetrics.registerFont(TTFont("ResumeBold", str(bold)))
     return "ResumeRegular", "ResumeBold"
 
 
@@ -640,21 +962,47 @@ def pdf_markup(markup: str, style: ParagraphStyle) -> Paragraph:
     return Paragraph(markup, style)
 
 
+def pdf_icon_markup(path: Path | None, size: int = 9) -> str:
+    if not path:
+        return ""
+    return (
+        f'<img src="{html.escape(str(path), quote=True)}" '
+        f'width="{size}" height="{size}" valign="middle"/>'
+    )
+
+
 def build_pdf_styles(lang: str, download_style: dict[str, Any]) -> dict[str, ParagraphStyle]:
     style_colors = download_style["colors"]
     typography = download_style["typography"]
     regular, bold = register_pdf_fonts(lang)
     base = getSampleStyleSheet()
     return {
+        "kicker": ParagraphStyle(
+            "ResumeKicker",
+            parent=base["BodyText"],
+            fontName=bold,
+            fontSize=typography["kicker"]["fontSize"],
+            leading=typography["kicker"]["lineHeight"],
+            textColor=colors.HexColor(f"#{style_colors['accent']}"),
+            spaceAfter=2,
+        ),
         "title": ParagraphStyle(
             "ResumeTitle",
-            parent=base["Title"],
+            parent=base["Heading1"],
             fontName=bold,
             fontSize=typography["title"]["fontSize"],
             leading=typography["title"]["lineHeight"],
             textColor=colors.HexColor(f"#{style_colors['text']}"),
-            spaceAfter=6,
-            alignment=TA_CENTER,
+            spaceAfter=2,
+        ),
+        "headline": ParagraphStyle(
+            "ResumeHeadline",
+            parent=base["BodyText"],
+            fontName=bold,
+            fontSize=typography["headline"]["fontSize"],
+            leading=typography["headline"]["lineHeight"],
+            textColor=colors.HexColor(f"#{style_colors['text']}"),
+            spaceAfter=3,
         ),
         "contact": ParagraphStyle(
             "ResumeContact",
@@ -663,17 +1011,34 @@ def build_pdf_styles(lang: str, download_style: dict[str, Any]) -> dict[str, Par
             fontSize=typography["contact"]["fontSize"],
             leading=typography["contact"]["lineHeight"],
             textColor=colors.HexColor(f"#{style_colors['muted']}"),
-            alignment=TA_CENTER,
-            spaceAfter=7,
+            spaceAfter=3,
         ),
-        "body": ParagraphStyle(
-            "ResumeBody",
+        "summary": ParagraphStyle(
+            "ResumeSummary",
             parent=base["BodyText"],
             fontName=regular,
-            fontSize=typography["body"]["fontSize"],
-            leading=typography["body"]["lineHeight"],
+            fontSize=typography["summary"]["fontSize"],
+            leading=typography["summary"]["lineHeight"],
             textColor=colors.HexColor(f"#{style_colors['text']}"),
-            spaceAfter=5,
+            spaceAfter=0,
+        ),
+        "factLabel": ParagraphStyle(
+            "ResumeFactLabel",
+            parent=base["BodyText"],
+            fontName=bold,
+            fontSize=typography["factLabel"]["fontSize"],
+            leading=typography["factLabel"]["lineHeight"],
+            textColor=colors.HexColor(f"#{style_colors['muted']}"),
+            spaceAfter=1,
+        ),
+        "factValue": ParagraphStyle(
+            "ResumeFactValue",
+            parent=base["BodyText"],
+            fontName=bold,
+            fontSize=typography["factValue"]["fontSize"],
+            leading=typography["factValue"]["lineHeight"],
+            textColor=colors.HexColor(f"#{style_colors['text']}"),
+            spaceAfter=0,
         ),
         "section": ParagraphStyle(
             "ResumeSection",
@@ -682,8 +1047,17 @@ def build_pdf_styles(lang: str, download_style: dict[str, Any]) -> dict[str, Par
             fontSize=typography["section"]["fontSize"],
             leading=typography["section"]["lineHeight"],
             textColor=colors.HexColor(f"#{style_colors['accent']}"),
-            spaceBefore=9,
-            spaceAfter=5,
+            spaceBefore=8,
+            spaceAfter=2,
+        ),
+        "sectionBody": ParagraphStyle(
+            "ResumeSectionBody",
+            parent=base["BodyText"],
+            fontName=regular,
+            fontSize=typography["sectionBody"]["fontSize"],
+            leading=typography["sectionBody"]["lineHeight"],
+            textColor=colors.HexColor(f"#{style_colors['muted']}"),
+            spaceAfter=4,
         ),
         "company": ParagraphStyle(
             "ResumeCompany",
@@ -692,7 +1066,6 @@ def build_pdf_styles(lang: str, download_style: dict[str, Any]) -> dict[str, Par
             fontSize=typography["company"]["fontSize"],
             leading=typography["company"]["lineHeight"],
             textColor=colors.HexColor(f"#{style_colors['text']}"),
-            spaceBefore=4,
             spaceAfter=2,
         ),
         "meta": ParagraphStyle(
@@ -702,7 +1075,16 @@ def build_pdf_styles(lang: str, download_style: dict[str, Any]) -> dict[str, Par
             fontSize=typography["meta"]["fontSize"],
             leading=typography["meta"]["lineHeight"],
             textColor=colors.HexColor(f"#{style_colors['muted']}"),
-            spaceAfter=4,
+            spaceAfter=1,
+        ),
+        "body": ParagraphStyle(
+            "ResumeBody",
+            parent=base["BodyText"],
+            fontName=regular,
+            fontSize=typography["body"]["fontSize"],
+            leading=typography["body"]["lineHeight"],
+            textColor=colors.HexColor(f"#{style_colors['text']}"),
+            spaceAfter=2,
         ),
         "bullet": ParagraphStyle(
             "ResumeBullet",
@@ -710,12 +1092,52 @@ def build_pdf_styles(lang: str, download_style: dict[str, Any]) -> dict[str, Par
             fontName=regular,
             fontSize=typography["bullet"]["fontSize"],
             leading=typography["bullet"]["lineHeight"],
-            leftIndent=11,
-            firstLineIndent=-7,
+            leftIndent=12,
+            firstLineIndent=-8,
             textColor=colors.HexColor(f"#{style_colors['text']}"),
-            spaceAfter=2.2,
+            spaceAfter=1,
+        ),
+        "cardTitle": ParagraphStyle(
+            "ResumeCardTitle",
+            parent=base["BodyText"],
+            fontName=bold,
+            fontSize=typography["cardTitle"]["fontSize"],
+            leading=typography["cardTitle"]["lineHeight"],
+            textColor=colors.HexColor(f"#{style_colors['text']}"),
+            spaceAfter=2,
+        ),
+        "cardBody": ParagraphStyle(
+            "ResumeCardBody",
+            parent=base["BodyText"],
+            fontName=regular,
+            fontSize=typography["cardBody"]["fontSize"],
+            leading=typography["cardBody"]["lineHeight"],
+            textColor=colors.HexColor(f"#{style_colors['text']}"),
+            spaceAfter=0,
         ),
     }
+
+
+def pdf_section(story: list[Any], title: str, styles: dict[str, ParagraphStyle], subtitle: str | None = None) -> None:
+    story.append(Paragraph(html.escape(title.upper()), styles["section"]))
+    if subtitle:
+        story.append(pdf_paragraph(subtitle, styles["sectionBody"]))
+
+
+def pdf_contact_markup(data: dict[str, Any], lang: str, accent_color: str, build_dir: Path) -> str:
+    items = []
+    for key in data["contactKeys"]:
+        contact = data["contacts"][key][lang]
+        contact_text = contact_link_text(contact)
+        href = contact_href(contact)
+        contact_markup = pdf_link(contact_text, href, accent_color) if href else pdf_text(contact_text)
+        items.append(
+            (
+                f'{pdf_icon_markup(contact_icon_path(key, contact, build_dir / "contact-icons"))} '
+                f"{contact_markup}"
+            ).strip()
+        )
+    return " | ".join(items)
 
 
 def generate_pdf(data: dict[str, Any], lang: str, output_path: Path, build_dir: Path) -> None:
@@ -728,91 +1150,52 @@ def generate_pdf(data: dict[str, Any], lang: str, output_path: Path, build_dir: 
     doc = SimpleDocTemplate(
         str(output_path),
         pagesize=A4,
-        rightMargin=0.62 * inch,
-        leftMargin=0.62 * inch,
-        topMargin=0.55 * inch,
-        bottomMargin=0.55 * inch,
+        rightMargin=0.56 * inch,
+        leftMargin=0.56 * inch,
+        topMargin=0.48 * inch,
+        bottomMargin=0.48 * inch,
         title=content["meta"]["title"],
         author=content["hero"]["name"],
     )
     story: list[Any] = []
+    story.append(pdf_paragraph(content["hero"]["name"], styles["title"]))
+    story.append(pdf_markup(pdf_contact_markup(data, lang, style_colors["accent"], build_dir), styles["contact"]))
+    story.append(pdf_paragraph(content["hero"]["role"], styles["headline"]))
 
-    story.append(Paragraph(html.escape(content["hero"]["name"]), styles["title"]))
-    contact_links = [
-        pdf_link(
-            data["contacts"][key][lang]["label"],
-            data["contacts"][key][lang]["url"],
-            style_colors["accent"],
-        )
-        for key in data["contactKeys"]
-    ]
-    story.append(Paragraph(
-        f"{html.escape(content['hero']['facts'][0]['value'])} | {html.escape(content['hero']['facts'][3]['value'])}<br/>"
-        + " | ".join(contact_links),
-        styles["contact"],
-    ))
-    story.append(pdf_paragraph(content["hero"]["role"], styles["body"]))
-    story.append(pdf_paragraph(content["hero"]["summary"], styles["body"]))
-
-    story.append(Paragraph(html.escape(content["experience"]["title"].upper()), styles["section"]))
+    pdf_section(story, download_section_title(lang, "experience"), styles)
     for item in content["experience"]["items"]:
+        icon_markup = pdf_icon_markup(company_icon_path(item, build_dir / "company-icons"), 10)
         company_text = (
             pdf_link(item["company"], item["companyUrl"], style_colors["accent"])
             if item.get("companyUrl")
             else html.escape(item["company"])
         )
-        company_para = Paragraph(company_text, styles["company"])
-        image_path = resolve_image(item.get("companyIconDark") or item.get("companyIcon", ""), build_dir / "icons", 96)
-        if image_path:
-            icon = Image(str(image_path), width=0.18 * inch, height=0.18 * inch)
-            table = Table([[icon, company_para]], colWidths=[0.24 * inch, None], hAlign="LEFT")
-            table.setStyle(TableStyle([
-                ("VALIGN", (0, 0), (-1, -1), "MIDDLE"),
-                ("LEFTPADDING", (0, 0), (-1, -1), 0),
-                ("RIGHTPADDING", (0, 0), (-1, -1), 4),
-                ("TOPPADDING", (0, 0), (-1, -1), 0),
-                ("BOTTOMPADDING", (0, 0), (-1, -1), 0),
-            ]))
-            story.append(table)
-        else:
-            story.append(company_para)
         story.append(pdf_markup(
-            f"<b>{pdf_text(item['role'])}</b> | {pdf_text(item['period'])} | {pdf_text(item['location'])}",
-            styles["meta"],
+            f"{icon_markup} {company_text} | <b>{pdf_text(experience_header_text(item))}</b>".strip(),
+            styles["company"],
         ))
         story.append(pdf_paragraph(item["intro"], styles["body"]))
-        story.append(pdf_markup(f"<b>{pdf_text(labels['achievements'])}:</b>", styles["body"]))
         for bullet in item["bullets"]:
-            story.append(Paragraph(f"• {pdf_text(bullet)}", styles["bullet"]))
+            story.append(pdf_paragraph(f"• {bullet}", styles["bullet"]))
         story.append(pdf_markup(
             f"<b>{pdf_text(labels['stack'])}:</b> {pdf_text(', '.join(item['stack']))}",
             styles["meta"],
         ))
+        story.append(Spacer(1, 1))
 
-    story.append(Paragraph(html.escape(content["education"]["title"].upper()), styles["section"]))
+    pdf_section(story, download_section_title(lang, "education"), styles)
     for item in content["education"]["items"]:
         story.append(pdf_markup(
-            f"<b>{pdf_text(item['institution'])}</b><br/>{pdf_text(item['degree'])} | {pdf_text(item['period'])}",
+            f"<b>{pdf_text(item['institution'])}</b> | {pdf_text(item['degree'])} ({pdf_text(item['period'])})",
             styles["body"],
         ))
 
-    story.append(Paragraph(html.escape(content["strengths"]["title"].upper()), styles["section"]))
-    for card in content["strengths"]["cards"]:
-        story.append(pdf_markup(
-            f"<b>{pdf_text(card['title'])}:</b> {pdf_text(card['body'])}",
-            styles["body"],
-        ))
-
-    story.append(Paragraph(html.escape(content["skills"]["title"].upper()), styles["section"]))
-    for group in content["skills"]["groups"]:
-        story.append(pdf_markup(
-            f"<b>{pdf_text(group['title'])}:</b> {pdf_text(', '.join(group['items']))}",
-            styles["body"],
-        ))
-
-    story.append(Paragraph(html.escape(content["preferences"]["title"].upper()), styles["section"]))
-    for item in content["preferences"]["items"]:
-        story.append(Paragraph(f"• {pdf_text(item)}", styles["bullet"]))
+    pdf_section(story, download_section_title(lang, "skills"), styles)
+    skill_markup = " | ".join(
+        f"<b>{pdf_text(group['title'])}:</b> {pdf_text(', '.join(group['items']))}"
+        for group in content["skills"]["groups"]
+    )
+    story.append(pdf_markup(skill_markup, styles["body"]))
 
     doc.build(story)
 
@@ -830,21 +1213,24 @@ def copy_public_data(data_path: Path, output_root: Path) -> None:
 
 
 def contact_site_payload(contact: dict[str, str]) -> dict[str, str]:
-    return {
+    payload = {
         key: contact[key]
-        for key in ("url", "icon", "iconDark")
+        for key in ("value", "icon", "iconDark")
         if key in contact
     }
+    href = contact_href(contact)
+    if href:
+        payload["href"] = href
+    return payload
 
 
 def write_site_data(data: dict[str, Any], output_path: Path) -> None:
     output_path.parent.mkdir(parents=True, exist_ok=True)
     default_language = data["meta"]["defaultLanguage"]
-    site_contact_keys = data["content"][default_language]["hero"]["links"].keys()
     payload = {
         "contacts": {
             key: contact_site_payload(data["contacts"][key][default_language])
-            for key in site_contact_keys
+            for key in HERO_CONTACT_KEYS
             if key in data["contacts"]
         },
         "content": data["content"],

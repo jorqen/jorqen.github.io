@@ -4,212 +4,132 @@ defaultLanguage: "en"
 languages:
   - "en"
   - "ru"
-dateFormats:
-  monthNames:
-    en:
-      - "Jan"
-      - "Feb"
-      - "Mar"
-      - "Apr"
-      - "May"
-      - "Jun"
-      - "Jul"
-      - "Aug"
-      - "Sep"
-      - "Oct"
-      - "Nov"
-      - "Dec"
-    ru:
-      - "Янв"
-      - "Фев"
-      - "Мар"
-      - "Апр"
-      - "Май"
-      - "Июн"
-      - "Июл"
-      - "Авг"
-      - "Сен"
-      - "Окт"
-      - "Ноя"
-      - "Дек"
-downloadStyles:
-  colors:
-    accent: "1D5FD1"
-    text: "0F1F36"
-    muted: "526581"
-    line: "DBE4F2"
-  typography:
-    title:
-      fontSize: 22
-      lineHeight: 26
-    contact:
-      fontSize: 8.5
-      lineHeight: 11
-    body:
-      fontSize: 9.5
-      lineHeight: 12.3
-    section:
-      fontSize: 11.5
-      lineHeight: 13.5
-    company:
-      fontSize: 10.5
-      lineHeight: 12
-    meta:
-      fontSize: 9
-      lineHeight: 10.5
-    bullet:
-      fontSize: 9
-      lineHeight: 11.2
-contacts:
-  website:
-    label:
-      en: "Website"
-      ru: "Сайт"
-    url: "https://jorqen.github.io"
-  linkedin:
-    label: "LinkedIn"
-    url: "https://www.linkedin.com/in/jorqen"
-    icon: "assets/icons/linkedin.svg"
-  github:
-    label: "GitHub"
-    url: "https://github.com/jorqen"
-    icon: "assets/icons/light/github.svg"
-    iconDark: "assets/icons/dark/github.svg"
-  telegram:
-    label: "Telegram"
-    url: "https://t.me/jorqen"
-    icon: "assets/icons/light/telegram.svg"
-    iconDark: "assets/icons/dark/telegram.svg"
-site:
-  meta:
-    title:
-      en: "Matvey Sizov | Backend Developer / Software Engineer"
-      ru: "Матвей Сизов | Backend Developer / Software Engineer"
-    description:
-      en: "Matvey Sizov - Backend Developer / Software Engineer. Go, distributed systems, low-latency backend development, and production reliability in product and platform teams."
-      ru: "Матвей Сизов - Backend Developer / Software Engineer. Go, распределенные системы, backend с низкой задержкой и надежность production в продуктовых и платформенных командах."
-  brand:
-    en: "Matvey Sizov"
-    ru: "Матвей Сизов"
-  nav:
-    resume:
-      en: "Resume"
-      ru: "Резюме"
-    experience:
-      en: "Experience"
-      ru: "Опыт"
-    education:
-      en: "Education"
-      ru: "Образование"
-    strengths:
-      en: "Profile"
-      ru: "Профиль"
-    skills:
-      en: "Stack"
-      ru: "Стек"
-  langSwitcherLabel:
-    en: "Language switcher"
-    ru: "Переключение языка"
-  theme:
-    toDark:
-      en: "Dark theme"
-      ru: "Тёмная тема"
-    toLight:
-      en: "Light theme"
-      ru: "Светлая тема"
-    switcherLabel:
-      en: "Theme switcher"
-      ru: "Переключение темы"
-  hero:
-    kicker: "Backend Developer / Software Engineer"
-    name:
-      en: "Matvey Sizov"
-      ru: "Матвей Сизов"
-    role:
-      en: "More than 4 years in backend development. Golang, Java, distributed systems, product and infrastructure engineering."
-      ru: "Более 4-х лет в backend-разработке. Golang, Java, распределенные системы, продуктовая и инфраструктурная разработка."
-    summary:
-      en: "I started programming in Java in my early teens, entered backend professionally through Java, and then shifted my primary focus to Go because explicit and understandable systems are a better fit for me. Today I work on both infrastructure and product backends, and I am strongest where a team needs someone who can turn ambiguous requirements into a production system with reasonable trade-offs, observability, and reliable delivery."
-      ru: "Я начал программировать на Java еще в раннем подростковом возрасте, вошел в профессию backend-разработчика через Java, а затем перевел основной фокус на Go, потому что мне ближе явные и понятные системы. Сейчас я работаю и с инфраструктурным, и с продуктовым backend, а сильнее всего проявляюсь там, где команде нужен человек, который превращает размытые требования в production-систему с разумными компромиссами, наблюдаемостью и надежной поставкой решений."
-    photo:
+
+# Reusable media presets. Keep file paths and theme variants here; keep resume text below.
+assets:
+  icons:
+    heroFacts:
+      location: &icon_fact_location
+        icon: "assets/icons/light/location.svg"
+        iconDark: "assets/icons/dark/location.svg"
+      experience: &icon_fact_experience
+        icon: "assets/icons/light/briefcase.svg"
+        iconDark: "assets/icons/dark/briefcase.svg"
+      primaryStack: &icon_fact_primary_stack
+        icon: "assets/icons/light/layers.svg"
+        iconDark: "assets/icons/dark/layers.svg"
+      format: &icon_fact_format
+        icon: "assets/icons/light/star.svg"
+        iconDark: "assets/icons/dark/star.svg"
+    contacts:
+      linkedin: &icon_contact_linkedin
+        icon: "assets/icons/linkedin.svg"
+      github: &icon_contact_github
+        icon: "assets/icons/light/github.svg"
+        iconDark: "assets/icons/dark/github.svg"
+      telegram: &icon_contact_telegram
+        icon: "assets/icons/telegram.svg"
+    companies:
+      atom: &icon_company_atom
+        icon: "assets/icons/atom.svg"
+      sbertech: &icon_company_sbertech
+        icon: "assets/icons/light/sbertech.svg"
+        iconDark: "assets/icons/dark/sbertech.svg"
+      lukyanovTech: &icon_company_lukyanov
+        icon: "assets/icons/lukyanov.png"
+      magnusTech: &icon_company_magnus
+        icon: "assets/icons/magnus.svg"
+      exnode: &icon_company_exnode
+        icon: "assets/icons/light/exnode.svg"
+        iconDark: "assets/icons/dark/exnode.svg"
+      kalugaPower: &icon_company_kaluga
+        icon: "assets/icons/kaluga.svg"
+  photos:
+    heroStudio: &photo_hero_studio
       src: "assets/photos/matvey-studio.jpg"
-      caption:
-        en: "Studio portrait"
-        ru: "Студийный портрет"
       position: "center 18%"
       filter: "brightness(0.94) contrast(1.04) saturate(0.9)"
-    links:
-      linkedin: "LinkedIn"
-      github: "GitHub"
-      telegram: "Telegram"
-    facts:
-      - icon: "assets/icons/light/location.svg"
-        iconDark: "assets/icons/dark/location.svg"
-        label:
-          en: "Location"
-          ru: "Локация"
-        value:
-          en: "Moscow, Russia"
-          ru: "Москва, Россия"
-      - icon: "assets/icons/light/briefcase.svg"
-        iconDark: "assets/icons/dark/briefcase.svg"
-        label:
-          en: "Experience"
-          ru: "Опыт"
-        value:
-          en: "Golang - 4+ years\nJava - 6 months"
-          ru: "Golang - 4+ года\nJava - 6 месяцев"
-      - icon: "assets/icons/light/layers.svg"
-        iconDark: "assets/icons/dark/layers.svg"
-        label:
-          en: "Primary stack"
-          ru: "Основной стек"
-        value:
-          en: "Go, distributed systems"
-          ru: "Go, распределенные системы"
-      - icon: "assets/icons/light/star.svg"
-        iconDark: "assets/icons/dark/star.svg"
-        label:
-          en: "Format"
-          ru: "Формат"
-        value:
-          en: "Remote / relocation"
-          ru: "Удаленно / релокация"
-  resumeDownloads:
-    fileBaseName: "Matvey_Sizov"
-    title:
-      en: "Download resume"
-      ru: "Скачать резюме"
-    labels:
-      pdf:
-        en: "For sharing and printing"
-        ru: "Для отправки и печати"
-      docx:
-        en: "Editable source"
-        ru: "Редактируемый источник"
-      txt:
-        en: "Text version"
-        ru: "Текстовая версия"
-  lightbox:
-    openPhoto:
-      en: "Open photo"
-      ru: "Открыть фото"
-    close:
-      en: "Close photo viewer"
-      ru: "Закрыть просмотр фото"
-    previous:
-      en: "Previous photo"
-      ru: "Предыдущее фото"
-    next:
-      en: "Next photo"
-      ru: "Следующее фото"
-  footer:
-    en: "© {year} Matvey Sizov. Personal website for recruiters and hiring managers."
-    ru: "© {year} Матвей Сизов. Сайт-визитка для рекрутеров и менеджеров по найму."
+    stairs: &photo_stairs
+      src: "assets/photos/matvey-stairs.jpg"
+      position: "center 18%"
+      filter: "brightness(0.8) contrast(1.03) saturate(0.88)"
+    japan: &photo_japan
+      src: "assets/photos/matvey-japan.jpg"
+      filter: "brightness(1.06) contrast(1.03) saturate(0.92)"
+    cafe: &photo_cafe
+      src: "assets/photos/matvey-cafe.jpg"
+      filter: "brightness(0.96) contrast(1.02) saturate(0.92)"
+    mountains: &photo_mountains
+      src: "assets/photos/matvey-mountains.jpg"
+      position: "center 26%"
+      filter: "brightness(0.88) contrast(1.03) saturate(0.92)"
+    lake: &photo_lake
+      src: "assets/photos/matvey-lake.jpg"
+      filter: "brightness(0.9) contrast(1.02) saturate(0.9)"
+    travel: &photo_travel
+      src: "assets/photos/matvey-travel.jpg"
+      filter: "brightness(1.01) contrast(1.03) saturate(0.9)"
+
+person:
+  name:
+    en: "Matvey Sizov"
+    ru: "Матвей Сизов"
+  headline: "Backend Developer / Software Engineer"
+  role:
+    en: "More than 4 years in backend development. Golang, Java, distributed systems, product and infrastructure engineering."
+    ru: "Более 4-х лет в backend-разработке. Golang, Java, распределенные системы, продуктовая и инфраструктурная разработка."
+  summary:
+    en: "I started programming in Java in my early teens, entered backend professionally through Java, and then shifted my primary focus to Go because explicit and understandable systems are a better fit for me. Today I work on both infrastructure and product backends, and I am strongest where a team needs someone who can turn ambiguous requirements into a production system with reasonable trade-offs, observability, and reliable delivery."
+    ru: "Я начал программировать на Java еще в раннем подростковом возрасте, вошел в профессию backend-разработчика через Java, а затем перевел основной фокус на Go, потому что мне ближе явные и понятные системы. Сейчас я работаю и с инфраструктурным, и с продуктовым backend, а сильнее всего проявляюсь там, где команде нужен человек, который превращает размытые требования в production-систему с разумными компромиссами, наблюдаемостью и надежной поставкой решений."
+  photo:
+    <<: *photo_hero_studio
+    caption:
+      en: "Studio portrait"
+      ru: "Студийный портрет"
+  facts:
+    - <<: *icon_fact_location
+      label:
+        en: "Location"
+        ru: "Локация"
+      value:
+        en: "Moscow, Russia"
+        ru: "Москва, Россия"
+    - <<: *icon_fact_experience
+      label:
+        en: "Experience"
+        ru: "Опыт"
+      value:
+        en: "Golang - 4+ years\nJava - 6 months"
+        ru: "Golang - 4+ года\nJava - 6 месяцев"
+    - <<: *icon_fact_primary_stack
+      label:
+        en: "Primary stack"
+        ru: "Основной стек"
+      value:
+        en: "Go, distributed systems"
+        ru: "Go, распределенные системы"
+    - <<: *icon_fact_format
+      label:
+        en: "Format"
+        ru: "Формат"
+      value:
+        en: "Remote / relocation"
+        ru: "Удаленно / релокация"
+
+contacts:
+  website:
+    value: "https://jorqen.github.io"
+  linkedin:
+    <<: *icon_contact_linkedin
+    value: "https://www.linkedin.com/in/jorqen"
+  github:
+    <<: *icon_contact_github
+    value: "https://github.com/jorqen"
+  telegram:
+    <<: *icon_contact_telegram
+    value: "https://t.me/jorqen"
+
 resumeLabels:
-  achievements:
-    en: "Achievements"
-    ru: "Достижения"
   stack:
     en: "Stack"
     ru: "Стек"
@@ -219,6 +139,7 @@ resumeLabels:
   expectedGraduation:
     en: "Expected graduation"
     ru: "Ожидаемое окончание"
+
 experience:
   title:
     en: "Experience"
@@ -227,7 +148,10 @@ experience:
     en: "Company site"
     ru: "Сайт компании"
   items:
-    - company: "ATOM"
+    - <<: *icon_company_atom
+      company:
+        en: "ATOM"
+        ru: "АТОМ"
       role: "Senior Software Engineer, Communications & Telemetry"
       startDate: "2025-02"
       location:
@@ -235,7 +159,7 @@ experience:
         ru: "Удаленно из России"
       summary:
         en: "ATOM is building a Russian electric vehicle platform. I work in communications and telemetry on backend services that connect the car, cloud, and external clients, with a focus on latency, security, and operational reliability."
-        ru: "ATOM строит российскую платформу электромобиля. Я работаю в направлении коммуникаций и телеметрии над backend-сервисами, которые соединяют автомобиль, облако и внешних клиентов, с фокусом на задержку, безопасность и операционную надежность."
+        ru: "АТОМ строит российскую платформу электромобиля. Я работаю в направлении коммуникаций и телеметрии над backend-сервисами, которые соединяют автомобиль, облако и внешних клиентов, с фокусом на задержку, безопасность и операционную надежность."
       highlights:
         - en: "Worked with leadership, peer teams, and architects to turn ambiguous and partially unrealistic requirements into a releasable backend architecture for a new broker."
           ru: "Работал с руководством, смежными командами и архитекторами, чтобы превратить размытые и частично нереалистичные требования в релизопригодную backend-архитектуру для нового брокера."
@@ -263,8 +187,8 @@ experience:
         - "Kubernetes"
         - "CI/CD"
       url: "https://atom.auto"
-      icon: "assets/icons/atom.svg"
-    - company: "Sber Tech"
+    - <<: *icon_company_sbertech
+      company: "Sber Tech"
       role: "Software Engineer, Service Mesh & Platform Infrastructure"
       startDate: "2024-01"
       endDate: "2025-02"
@@ -295,9 +219,8 @@ experience:
         - "CI/CD"
         - "Allure"
       url: "https://sbertech.ru"
-      icon: "assets/icons/light/sbertech.svg"
-      iconDark: "assets/icons/dark/sbertech.svg"
-    - company: "Lukyanov Tech"
+    - <<: *icon_company_lukyanov
+      company: "Lukyanov Tech"
       role: "Part-Time Mentor / Mock Interviewer"
       startDate: "2024-01"
       location:
@@ -317,8 +240,8 @@ experience:
         - "System design"
         - "Technical communication"
       url: "https://lukyanov.tech"
-      icon: "assets/icons/lukyanov.png"
-    - company: "Magnus Tech"
+    - <<: *icon_company_magnus
+      company: "Magnus Tech"
       role: "Backend Engineer"
       startDate: "2023-03"
       endDate: "2024-01"
@@ -348,8 +271,8 @@ experience:
         - "Prometheus"
         - "CI/CD"
       url: "https://magnustech.com"
-      icon: "assets/icons/magnus.svg"
-    - company: "Exnode"
+    - <<: *icon_company_exnode
+      company: "Exnode"
       role: "Backend Engineer"
       startDate: "2022-09"
       endDate: "2023-03"
@@ -357,8 +280,8 @@ experience:
         en: "Moscow, Russia"
         ru: "Москва, Россия"
       summary:
-        en: "Exnode developed crypto exchange, B2B payment, and P2P trading products."
-        ru: "Exnode развивал продукты криптобиржи, B2B-платежей и P2P-обмена."
+        en: "Exnode develops crypto exchange, B2B payment, and P2P trading products."
+        ru: "Exnode развивает продукты криптобиржи, B2B-платежей и P2P-обмена."
       highlights:
         - en: "Split a large monolithic backend into smaller services and replaced part of internal REST communication with gRPC to reduce latency and simplify service boundaries."
           ru: "Разделил большой монолитный backend на более мелкие сервисы и заменил часть внутреннего REST-взаимодействия на gRPC, чтобы снизить задержку и упростить границы сервисов."
@@ -378,9 +301,8 @@ experience:
         - "Grafana"
         - "Telegram Bot API"
       url: "https://exnode.ru"
-      icon: "assets/icons/light/exnode.svg"
-      iconDark: "assets/icons/dark/exnode.svg"
-    - company:
+    - <<: *icon_company_kaluga
+      company:
         en: "Kaluga Power Supply Company"
         ru: "Калужская сбытовая компания"
       role: "Backend Engineer"
@@ -407,7 +329,6 @@ experience:
         - "Payments"
         - "Dashboards"
       url: "https://kskkaluga.ru"
-      icon: "assets/icons/kaluga.svg"
     - company:
         en: "Center for Regional Management of Lipetsk Oblast (CUR)"
         ru: "Центр Управления Регионом Липецкой области (ЦУР)"
@@ -429,6 +350,7 @@ experience:
         - "Java"
         - "SQL"
         - "Backend"
+
 education:
   title:
     en: "Education"
@@ -453,6 +375,7 @@ education:
         ru: "СПО, информационные технологии и программирование"
       startDate: "2021"
       endDate: "2025"
+
 strengths:
   title:
     en: "Profile"
@@ -485,6 +408,7 @@ strengths:
       body:
         en: "I have 4 years of commercial backend development in Go and 6 months in Java. I started with Java as a teenager, got my first commercial backend role in Java, and then moved to Go because explicit engineering, simpler syntax, and low-latency services fit me better."
         ru: "У меня 4 года коммерческой backend-разработки на Go и 6 месяцев на Java. Я начал с Java еще подростком, получил первую коммерческую backend-роль на Java, а затем перешел в Go, потому что мне ближе явная инженерия, более простой синтаксис и сервисы с низкой задержкой."
+
 skills:
   title:
     en: "Key stack"
@@ -536,6 +460,7 @@ skills:
         - "Sentry"
         - "Allure"
         - "Testing frameworks"
+
 preferences:
   title:
     en: "What recruiters should know"
@@ -553,6 +478,7 @@ preferences:
       ru: "Я использую английский в рабочих и интервью-контекстах, когда это нужно, и продолжаю улучшать разговорную беглость для международных команд."
     - en: "Outside work, I mentor candidates, cycle, swim, go to the gym, and enjoy traveling; Japan is one of the places I especially want to revisit."
       ru: "Вне работы я менторю кандидатов, катаюсь на велосипеде, плаваю, хожу в зал и люблю путешествовать; Япония - одно из мест, куда мне особенно хочется вернуться."
+
 gallery:
   title:
     en: "A few more photos"
@@ -561,35 +487,27 @@ gallery:
     en: "I intentionally keep this public photo section small: this site is primarily about my work, but I want it to stay human and real."
     ru: "Этот публичный фото-раздел я специально держу небольшим: сайт в первую очередь про мою работу, но мне хочется, чтобы он оставался живым и человеческим."
   items:
-    - src: "assets/photos/matvey-stairs.jpg"
+    - <<: *photo_stairs
       caption:
         en: "Stairs from the anime \"Your Name\""
         ru: "Лестница из аниме «Твоё имя»"
-      position: "center 18%"
-      filter: "brightness(0.8) contrast(1.03) saturate(0.88)"
-    - src: "assets/photos/matvey-japan.jpg"
+    - <<: *photo_japan
       caption:
         en: "Kendo training"
         ru: "Тренировка по Кэндо"
-      filter: "brightness(1.06) contrast(1.03) saturate(0.92)"
-    - src: "assets/photos/matvey-cafe.jpg"
+    - <<: *photo_cafe
       caption:
         en: "Photo from a cafe"
         ru: "Фото из кафе"
-      filter: "brightness(0.96) contrast(1.02) saturate(0.92)"
-    - src: "assets/photos/matvey-mountains.jpg"
+    - <<: *photo_mountains
       caption:
         en: "A 1,500m mountain climb"
         ru: "Подъём на 1 500м в гору"
-      position: "center 26%"
-      filter: "brightness(0.88) contrast(1.03) saturate(0.92)"
-    - src: "assets/photos/matvey-lake.jpg"
+    - <<: *photo_lake
       caption:
         en: "Japanese garden"
         ru: "Японский сад"
-      filter: "brightness(0.9) contrast(1.02) saturate(0.9)"
-    - src: "assets/photos/matvey-travel.jpg"
+    - <<: *photo_travel
       caption:
         en: "Cappadocia atmosphere (Turkey)"
         ru: "Атмосфера Каппадокии (Турция)"
-      filter: "brightness(1.01) contrast(1.03) saturate(0.9)"

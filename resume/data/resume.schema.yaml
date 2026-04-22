@@ -7,10 +7,9 @@ required:
   - "schema"
   - "defaultLanguage"
   - "languages"
-  - "dateFormats"
-  - "downloadStyles"
+  - "assets"
+  - "person"
   - "contacts"
-  - "site"
   - "resumeLabels"
   - "experience"
   - "education"
@@ -32,10 +31,10 @@ properties:
       - const: "en"
       - const: "ru"
     additionalItems: false
-  dateFormats:
-    "$ref": "#/definitions/dateFormats"
-  downloadStyles:
-    "$ref": "#/definitions/downloadStyles"
+  assets:
+    "$ref": "#/definitions/assets"
+  person:
+    "$ref": "#/definitions/person"
   contacts:
     type: "object"
     required:
@@ -53,19 +52,14 @@ properties:
         "$ref": "#/definitions/contact"
       telegram:
         "$ref": "#/definitions/contact"
-  site:
-    "$ref": "#/definitions/site"
   resumeLabels:
     type: "object"
     required:
-      - "achievements"
       - "stack"
       - "present"
       - "expectedGraduation"
     additionalProperties: false
     properties:
-      achievements:
-        "$ref": "#/definitions/localizedString"
       stack:
         "$ref": "#/definitions/localizedString"
       present:
@@ -103,108 +97,96 @@ definitions:
         "$ref": "#/definitions/stringValue"
       ru:
         "$ref": "#/definitions/stringValue"
-  dateFormats:
+  assets:
     type: "object"
     required:
-      - "monthNames"
+      - "icons"
+      - "photos"
     additionalProperties: false
     properties:
-      monthNames:
+      icons:
         type: "object"
         required:
-          - "en"
-          - "ru"
+          - "heroFacts"
+          - "contacts"
+          - "companies"
         additionalProperties: false
         properties:
-          en:
-            "$ref": "#/definitions/monthNameList"
-          ru:
-            "$ref": "#/definitions/monthNameList"
-  monthNameList:
-    type: "array"
-    minItems: 12
-    maxItems: 12
-    items:
-      "$ref": "#/definitions/stringValue"
-  downloadStyles:
+          heroFacts:
+            "$ref": "#/definitions/iconAssetCollection"
+          contacts:
+            "$ref": "#/definitions/iconAssetCollection"
+          companies:
+            "$ref": "#/definitions/iconAssetCollection"
+      photos:
+        "$ref": "#/definitions/photoAssetCollection"
+  iconAssetCollection:
+    type: "object"
+    minProperties: 1
+    additionalProperties:
+      "$ref": "#/definitions/iconAsset"
+  photoAssetCollection:
+    type: "object"
+    minProperties: 1
+    additionalProperties:
+      "$ref": "#/definitions/photoAsset"
+  iconAsset:
     type: "object"
     required:
-      - "colors"
-      - "typography"
+      - "icon"
     additionalProperties: false
     properties:
-      colors:
-        type: "object"
-        required:
-          - "accent"
-          - "text"
-          - "muted"
-          - "line"
-        additionalProperties: false
-        properties:
-          accent:
-            "$ref": "#/definitions/hexColor"
-          text:
-            "$ref": "#/definitions/hexColor"
-          muted:
-            "$ref": "#/definitions/hexColor"
-          line:
-            "$ref": "#/definitions/hexColor"
-      typography:
-        type: "object"
-        required:
-          - "title"
-          - "contact"
-          - "body"
-          - "section"
-          - "company"
-          - "meta"
-          - "bullet"
-        additionalProperties: false
-        properties:
-          title:
-            "$ref": "#/definitions/textStyle"
-          contact:
-            "$ref": "#/definitions/textStyle"
-          body:
-            "$ref": "#/definitions/textStyle"
-          section:
-            "$ref": "#/definitions/textStyle"
-          company:
-            "$ref": "#/definitions/textStyle"
-          meta:
-            "$ref": "#/definitions/textStyle"
-          bullet:
-            "$ref": "#/definitions/textStyle"
-  hexColor:
-    type: "string"
-    pattern: '^#?[0-9A-Fa-f]{6}$'
-  textStyle:
+      icon:
+        "$ref": "#/definitions/assetPath"
+      iconDark:
+        "$ref": "#/definitions/assetPath"
+  photoAsset:
     type: "object"
     required:
-      - "fontSize"
-      - "lineHeight"
+      - "src"
+      - "filter"
     additionalProperties: false
     properties:
-      fontSize:
-        type: "number"
-        exclusiveMinimum: 0
-      lineHeight:
-        type: "number"
-        exclusiveMinimum: 0
+      src:
+        "$ref": "#/definitions/stringValue"
+      position:
+        "$ref": "#/definitions/stringValue"
+      filter:
+        "$ref": "#/definitions/stringValue"
+  person:
+    type: "object"
+    required:
+      - "name"
+      - "headline"
+      - "role"
+      - "summary"
+      - "photo"
+      - "facts"
+    additionalProperties: false
+    properties:
+      name:
+        "$ref": "#/definitions/localizedString"
+      headline:
+        "$ref": "#/definitions/stringValue"
+      role:
+        "$ref": "#/definitions/localizedString"
+      summary:
+        "$ref": "#/definitions/localizedString"
+      photo:
+        "$ref": "#/definitions/imageAsset"
+      facts:
+        type: "array"
+        minItems: 1
+        items:
+          "$ref": "#/definitions/fact"
   contact:
     type: "object"
     required:
-      - "label"
-      - "url"
+      - "value"
     additionalProperties: false
     properties:
-      label:
-        "$ref": "#/definitions/localizedString"
-      url:
-        type: "string"
-        minLength: 1
-        format: "uri"
+      value:
+        "$ref": "#/definitions/stringValue"
       icon:
         "$ref": "#/definitions/assetPath"
       iconDark:
@@ -214,120 +196,8 @@ definitions:
       - "$ref": "#/definitions/contact"
       - type: "object"
         properties:
-          url:
+          value:
             const: "https://jorqen.github.io"
-  site:
-    type: "object"
-    required:
-      - "meta"
-      - "brand"
-      - "nav"
-      - "langSwitcherLabel"
-      - "theme"
-      - "hero"
-      - "resumeDownloads"
-      - "lightbox"
-      - "footer"
-    additionalProperties: false
-    properties:
-      meta:
-        type: "object"
-        required:
-          - "title"
-          - "description"
-        additionalProperties: false
-        properties:
-          title:
-            "$ref": "#/definitions/localizedString"
-          description:
-            "$ref": "#/definitions/localizedString"
-      brand:
-        "$ref": "#/definitions/localizedString"
-      nav:
-        type: "object"
-        required:
-          - "resume"
-          - "experience"
-          - "education"
-          - "strengths"
-          - "skills"
-        additionalProperties: false
-        properties:
-          resume:
-            "$ref": "#/definitions/localizedString"
-          experience:
-            "$ref": "#/definitions/localizedString"
-          education:
-            "$ref": "#/definitions/localizedString"
-          strengths:
-            "$ref": "#/definitions/localizedString"
-          skills:
-            "$ref": "#/definitions/localizedString"
-      langSwitcherLabel:
-        "$ref": "#/definitions/localizedString"
-      theme:
-        type: "object"
-        required:
-          - "toDark"
-          - "toLight"
-          - "switcherLabel"
-        additionalProperties: false
-        properties:
-          toDark:
-            "$ref": "#/definitions/localizedString"
-          toLight:
-            "$ref": "#/definitions/localizedString"
-          switcherLabel:
-            "$ref": "#/definitions/localizedString"
-      hero:
-        "$ref": "#/definitions/hero"
-      resumeDownloads:
-        "$ref": "#/definitions/resumeDownloads"
-      lightbox:
-        "$ref": "#/definitions/lightbox"
-      footer:
-        "$ref": "#/definitions/localizedString"
-  hero:
-    type: "object"
-    required:
-      - "kicker"
-      - "name"
-      - "role"
-      - "summary"
-      - "photo"
-      - "links"
-      - "facts"
-    additionalProperties: false
-    properties:
-      kicker:
-        "$ref": "#/definitions/stringValue"
-      name:
-        "$ref": "#/definitions/localizedString"
-      role:
-        "$ref": "#/definitions/localizedString"
-      summary:
-        "$ref": "#/definitions/localizedString"
-      photo:
-        "$ref": "#/definitions/imageAsset"
-      links:
-        type: "object"
-        required:
-          - "linkedin"
-          - "github"
-          - "telegram"
-        additionalProperties: false
-        properties:
-          linkedin:
-            "$ref": "#/definitions/stringValue"
-          github:
-            "$ref": "#/definitions/stringValue"
-          telegram:
-            "$ref": "#/definitions/stringValue"
-      facts:
-        type: "array"
-        minItems: 1
-        items:
-          "$ref": "#/definitions/fact"
   imageAsset:
     type: "object"
     required:
@@ -362,49 +232,6 @@ definitions:
       label:
         "$ref": "#/definitions/localizedString"
       value:
-        "$ref": "#/definitions/localizedString"
-  resumeDownloads:
-    type: "object"
-    required:
-      - "fileBaseName"
-      - "title"
-      - "labels"
-    additionalProperties: false
-    properties:
-      fileBaseName:
-        "$ref": "#/definitions/stringValue"
-      title:
-        "$ref": "#/definitions/localizedString"
-      labels:
-        type: "object"
-        required:
-          - "pdf"
-          - "docx"
-          - "txt"
-        additionalProperties: false
-        properties:
-          pdf:
-            "$ref": "#/definitions/localizedString"
-          docx:
-            "$ref": "#/definitions/localizedString"
-          txt:
-            "$ref": "#/definitions/localizedString"
-  lightbox:
-    type: "object"
-    required:
-      - "openPhoto"
-      - "close"
-      - "previous"
-      - "next"
-    additionalProperties: false
-    properties:
-      openPhoto:
-        "$ref": "#/definitions/localizedString"
-      close:
-        "$ref": "#/definitions/localizedString"
-      previous:
-        "$ref": "#/definitions/localizedString"
-      next:
         "$ref": "#/definitions/localizedString"
   experienceSection:
     type: "object"

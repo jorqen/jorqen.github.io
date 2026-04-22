@@ -74,6 +74,11 @@ const STATIC_THEME_ICON_BINDINGS = [
     icon: "star",
   },
 ];
+const HERO_CONTACT_BINDINGS = [
+  { key: "linkedin", id: "hero-linkedin" },
+  { key: "github", id: "hero-github" },
+  { key: "telegram", id: "hero-telegram" },
+];
 const photoLightboxState = {
   items: [],
   index: 0,
@@ -152,8 +157,13 @@ function setLinkLabel(id, text) {
   link.setAttribute("aria-label", text || "");
 }
 
-function getContactUrl(key) {
-  return RESUME_DATA.contacts?.[key]?.url || "";
+function getContactHref(key) {
+  return RESUME_DATA.contacts?.[key]?.href || "";
+}
+
+function getContactLabel(key) {
+  const value = String(RESUME_DATA.contacts?.[key]?.value || "");
+  return value.replace(/^https?:\/\//i, "");
 }
 
 function getContactIcon(key, theme) {
@@ -163,11 +173,15 @@ function getContactIcon(key, theme) {
 
 function setLinkHref(id, href) {
   const link = document.getElementById(id);
-  if (!link || !href) {
+  if (!link) {
     return;
   }
 
-  link.href = href;
+  if (href) {
+    link.href = href;
+  } else {
+    link.removeAttribute("href");
+  }
 }
 
 function detectLanguage() {
@@ -705,15 +719,11 @@ function renderLanguage(lang) {
   setText("hero-role", data.hero.role);
   setText("hero-summary", data.hero.summary);
 
-  setLinkLabel("hero-linkedin", data.hero.links.linkedin);
-  setLinkLabel("hero-github", data.hero.links.github);
-  setLinkLabel("hero-telegram", data.hero.links.telegram);
-  setLinkHref("hero-linkedin", getContactUrl("linkedin"));
-  setLinkHref("hero-github", getContactUrl("github"));
-  setLinkHref("hero-telegram", getContactUrl("telegram"));
-  setImageSource("#hero-linkedin img", getContactIcon("linkedin", theme));
-  setImageSource("#hero-github img", getContactIcon("github", theme));
-  setImageSource("#hero-telegram img", getContactIcon("telegram", theme));
+  HERO_CONTACT_BINDINGS.forEach((item) => {
+    setLinkLabel(item.id, getContactLabel(item.key));
+    setLinkHref(item.id, getContactHref(item.key));
+    setImageSource(`#${item.id} img`, getContactIcon(item.key, theme));
+  });
 
   renderFacts(data.hero.facts, theme);
   renderHeroPhoto(data.hero.photo, 0, `${data.lightbox.openPhoto}: ${data.hero.photo.caption || ""}`);

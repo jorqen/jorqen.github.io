@@ -1,6 +1,7 @@
 - Resume content in English and Russian must always be fully identical in meaning and scope for all extensions.
 - Resume experience must be sorted by work start date.
 - In downloaded resumes, keep all current contacts and also include the website link in contacts: https://jorqen.github.io
+- DOCX and PDF must look the same
 
 ## Repository structure
 

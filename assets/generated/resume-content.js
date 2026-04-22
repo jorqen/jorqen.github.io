@@ -1,18 +1,20 @@
 window.JORQEN_RESUME_DATA = {
   "contacts": {
     "linkedin": {
-      "url": "https://www.linkedin.com/in/jorqen",
-      "icon": "assets/icons/linkedin.svg"
+      "value": "https://www.linkedin.com/in/jorqen",
+      "icon": "assets/icons/linkedin.svg",
+      "href": "https://www.linkedin.com/in/jorqen"
     },
     "github": {
-      "url": "https://github.com/jorqen",
+      "value": "https://github.com/jorqen",
       "icon": "assets/icons/light/github.svg",
-      "iconDark": "assets/icons/dark/github.svg"
+      "iconDark": "assets/icons/dark/github.svg",
+      "href": "https://github.com/jorqen"
     },
     "telegram": {
-      "url": "https://t.me/jorqen",
-      "icon": "assets/icons/light/telegram.svg",
-      "iconDark": "assets/icons/dark/telegram.svg"
+      "value": "https://t.me/jorqen",
+      "icon": "assets/icons/telegram.svg",
+      "href": "https://t.me/jorqen"
     }
   },
   "content": {
@@ -42,14 +44,9 @@ window.JORQEN_RESUME_DATA = {
         "summary": "I started programming in Java in my early teens, entered backend professionally through Java, and then shifted my primary focus to Go because explicit and understandable systems are a better fit for me. Today I work on both infrastructure and product backends, and I am strongest where a team needs someone who can turn ambiguous requirements into a production system with reasonable trade-offs, observability, and reliable delivery.",
         "photo": {
           "src": "assets/photos/matvey-studio.jpg",
-          "caption": "Studio portrait",
           "position": "center 18%",
-          "filter": "brightness(0.94) contrast(1.04) saturate(0.9)"
-        },
-        "links": {
-          "linkedin": "LinkedIn",
-          "github": "GitHub",
-          "telegram": "Telegram"
+          "filter": "brightness(0.94) contrast(1.04) saturate(0.9)",
+          "caption": "Studio portrait"
         },
         "facts": [
           {
@@ -105,6 +102,7 @@ window.JORQEN_RESUME_DATA = {
             "company": "ATOM",
             "role": "Senior Software Engineer, Communications & Telemetry",
             "period": "Feb 2025 - Present",
+            "duration": "1 yr 2 mos",
             "location": "Remote from Russia",
             "intro": "ATOM is building a Russian electric vehicle platform. I work in communications and telemetry on backend services that connect the car, cloud, and external clients, with a focus on latency, security, and operational reliability.",
             "bullets": [
@@ -137,6 +135,7 @@ window.JORQEN_RESUME_DATA = {
             "company": "Sber Tech",
             "role": "Software Engineer, Service Mesh & Platform Infrastructure",
             "period": "Jan 2024 - Feb 2025",
+            "duration": "1 yr 1 mo",
             "location": "Moscow, Russia",
             "intro": "Sber Tech develops Platform V, a large corporate platform. I worked on a heavily modified Istio fork and adjacent infrastructure components for service-mesh control, policy enforcement, and platform integration.",
             "bullets": [
@@ -164,6 +163,7 @@ window.JORQEN_RESUME_DATA = {
             "company": "Lukyanov Tech",
             "role": "Part-Time Mentor / Mock Interviewer",
             "period": "Jan 2024 - Present",
+            "duration": "2 yrs 3 mos",
             "location": "Remote",
             "intro": "A part-time project focused on mentorship, interview preparation, and growth of backend candidates.",
             "bullets": [
@@ -183,6 +183,7 @@ window.JORQEN_RESUME_DATA = {
             "company": "Magnus Tech",
             "role": "Backend Engineer",
             "period": "Mar 2023 - Jan 2024",
+            "duration": "10 mos",
             "location": "Remote",
             "intro": "Magnus Tech is a custom development company. I worked on a pricing-control platform for the Bristol retail chain that combined store data, employee actions, ML pricing recommendations, and photo confirmation into one operational system.",
             "bullets": [
@@ -209,8 +210,9 @@ window.JORQEN_RESUME_DATA = {
             "company": "Exnode",
             "role": "Backend Engineer",
             "period": "Sep 2022 - Mar 2023",
+            "duration": "6 mos",
             "location": "Moscow, Russia",
-            "intro": "Exnode developed crypto exchange, B2B payment, and P2P trading products.",
+            "intro": "Exnode develops crypto exchange, B2B payment, and P2P trading products.",
             "bullets": [
               "Split a large monolithic backend into smaller services and replaced part of internal REST communication with gRPC to reduce latency and simplify service boundaries.",
               "Optimized payment and reporting queries using EXPLAIN ANALYZE, cutting several heavy PostgreSQL queries from 10-30 seconds to near real time.",
@@ -235,6 +237,7 @@ window.JORQEN_RESUME_DATA = {
             "company": "Kaluga Power Supply Company",
             "role": "Backend Engineer",
             "period": "Oct 2021 - Mar 2022",
+            "duration": "5 mos",
             "location": "Remote",
             "intro": "An early backend role in utility payment systems, customer portals, and administrative services.",
             "bullets": [
@@ -257,6 +260,7 @@ window.JORQEN_RESUME_DATA = {
             "company": "Center for Regional Management of Lipetsk Oblast (CUR)",
             "role": "Java Developer",
             "period": "Jun 2021 - Nov 2021",
+            "duration": "5 mos",
             "location": "Lipetsk, Russia",
             "intro": "My first commercial backend role in Java, focused on public digital and monitoring systems.",
             "bullets": [
@@ -382,35 +386,35 @@ window.JORQEN_RESUME_DATA = {
         "items": [
           {
             "src": "assets/photos/matvey-stairs.jpg",
-            "caption": "Stairs from the anime \"Your Name\"",
             "position": "center 18%",
-            "filter": "brightness(0.8) contrast(1.03) saturate(0.88)"
+            "filter": "brightness(0.8) contrast(1.03) saturate(0.88)",
+            "caption": "Stairs from the anime \"Your Name\""
           },
           {
             "src": "assets/photos/matvey-japan.jpg",
-            "caption": "Kendo training",
-            "filter": "brightness(1.06) contrast(1.03) saturate(0.92)"
+            "filter": "brightness(1.06) contrast(1.03) saturate(0.92)",
+            "caption": "Kendo training"
           },
           {
             "src": "assets/photos/matvey-cafe.jpg",
-            "caption": "Photo from a cafe",
-            "filter": "brightness(0.96) contrast(1.02) saturate(0.92)"
+            "filter": "brightness(0.96) contrast(1.02) saturate(0.92)",
+            "caption": "Photo from a cafe"
           },
           {
             "src": "assets/photos/matvey-mountains.jpg",
-            "caption": "A 1,500m mountain climb",
             "position": "center 26%",
-            "filter": "brightness(0.88) contrast(1.03) saturate(0.92)"
+            "filter": "brightness(0.88) contrast(1.03) saturate(0.92)",
+            "caption": "A 1,500m mountain climb"
           },
           {
             "src": "assets/photos/matvey-lake.jpg",
-            "caption": "Japanese garden",
-            "filter": "brightness(0.9) contrast(1.02) saturate(0.9)"
+            "filter": "brightness(0.9) contrast(1.02) saturate(0.9)",
+            "caption": "Japanese garden"
           },
           {
             "src": "assets/photos/matvey-travel.jpg",
-            "caption": "Cappadocia atmosphere (Turkey)",
-            "filter": "brightness(1.01) contrast(1.03) saturate(0.9)"
+            "filter": "brightness(1.01) contrast(1.03) saturate(0.9)",
+            "caption": "Cappadocia atmosphere (Turkey)"
           }
         ]
       },
@@ -448,14 +452,9 @@ window.JORQEN_RESUME_DATA = {
         "summary": "Я начал программировать на Java еще в раннем подростковом возрасте, вошел в профессию backend-разработчика через Java, а затем перевел основной фокус на Go, потому что мне ближе явные и понятные системы. Сейчас я работаю и с инфраструктурным, и с продуктовым backend, а сильнее всего проявляюсь там, где команде нужен человек, который превращает размытые требования в production-систему с разумными компромиссами, наблюдаемостью и надежной поставкой решений.",
         "photo": {
           "src": "assets/photos/matvey-studio.jpg",
-          "caption": "Студийный портрет",
           "position": "center 18%",
-          "filter": "brightness(0.94) contrast(1.04) saturate(0.9)"
-        },
-        "links": {
-          "linkedin": "LinkedIn",
-          "github": "GitHub",
-          "telegram": "Telegram"
+          "filter": "brightness(0.94) contrast(1.04) saturate(0.9)",
+          "caption": "Студийный портрет"
         },
         "facts": [
           {
@@ -511,6 +510,7 @@ window.JORQEN_RESUME_DATA = {
             "company": "АТОМ",
             "role": "Senior Software Engineer, Communications & Telemetry",
             "period": "Фев 2025 - настоящее время",
+            "duration": "1 г. 2 мес.",
             "location": "Удаленно из России",
             "intro": "АТОМ строит российскую платформу электромобиля. Я работаю в направлении коммуникаций и телеметрии над backend-сервисами, которые соединяют автомобиль, облако и внешних клиентов, с фокусом на задержку, безопасность и операционную надежность.",
             "bullets": [
@@ -543,6 +543,7 @@ window.JORQEN_RESUME_DATA = {
             "company": "Sber Tech",
             "role": "Software Engineer, Service Mesh & Platform Infrastructure",
             "period": "Янв 2024 - Фев 2025",
+            "duration": "1 г. 1 мес.",
             "location": "Москва, Россия",
             "intro": "Сбер Тех развивает Platform V, крупную корпоративную платформу. Я работал с сильно модифицированным форком Istio и смежными инфраструктурными компонентами для управления service mesh, контроля политик и платформенной интеграции.",
             "bullets": [
@@ -570,6 +571,7 @@ window.JORQEN_RESUME_DATA = {
             "company": "Lukyanov Tech",
             "role": "Part-Time Mentor / Mock Interviewer",
             "period": "Янв 2024 - настоящее время",
+            "duration": "2 г. 3 мес.",
             "location": "Удаленно",
             "intro": "Проект неполной занятости в области менторства, подготовки к интервью и роста backend-кандидатов.",
             "bullets": [
@@ -589,6 +591,7 @@ window.JORQEN_RESUME_DATA = {
             "company": "Magnus Tech",
             "role": "Backend Engineer",
             "period": "Мар 2023 - Янв 2024",
+            "duration": "10 мес.",
             "location": "Удаленно",
             "intro": "Magnus Tech - компания заказной разработки. Я работал над платформой контроля цен для сети «Бристоль», которая объединяла данные магазинов, действия сотрудников, ML-рекомендации по ценам и фотоподтверждения в единую операционную систему.",
             "bullets": [
@@ -615,8 +618,9 @@ window.JORQEN_RESUME_DATA = {
             "company": "Exnode",
             "role": "Backend Engineer",
             "period": "Сен 2022 - Мар 2023",
+            "duration": "6 мес.",
             "location": "Москва, Россия",
-            "intro": "Exnode развивал продукты криптобиржи, B2B-платежей и P2P-обмена.",
+            "intro": "Exnode развивает продукты криптобиржи, B2B-платежей и P2P-обмена.",
             "bullets": [
               "Разделил большой монолитный backend на более мелкие сервисы и заменил часть внутреннего REST-взаимодействия на gRPC, чтобы снизить задержку и упростить границы сервисов.",
               "Оптимизировал платежные и отчетные запросы через EXPLAIN ANALYZE, сократив несколько тяжелых PostgreSQL-запросов с 10-30 секунд до почти реального времени.",
@@ -641,6 +645,7 @@ window.JORQEN_RESUME_DATA = {
             "company": "Калужская сбытовая компания",
             "role": "Backend Engineer",
             "period": "Окт 2021 - Мар 2022",
+            "duration": "5 мес.",
             "location": "Удаленно",
             "intro": "Ранняя backend-роль в системах коммунальных платежей, клиентских кабинетов и административных сервисов.",
             "bullets": [
@@ -663,6 +668,7 @@ window.JORQEN_RESUME_DATA = {
             "company": "Центр Управления Регионом Липецкой области (ЦУР)",
             "role": "Java Developer",
             "period": "Июн 2021 - Ноя 2021",
+            "duration": "5 мес.",
             "location": "Липецк, Россия",
             "intro": "Моя первая коммерческая backend-роль на Java, связанная с государственными цифровыми и мониторинговыми системами.",
             "bullets": [
@@ -788,35 +794,35 @@ window.JORQEN_RESUME_DATA = {
         "items": [
           {
             "src": "assets/photos/matvey-stairs.jpg",
-            "caption": "Лестница из аниме «Твоё имя»",
             "position": "center 18%",
-            "filter": "brightness(0.8) contrast(1.03) saturate(0.88)"
+            "filter": "brightness(0.8) contrast(1.03) saturate(0.88)",
+            "caption": "Лестница из аниме «Твоё имя»"
           },
           {
             "src": "assets/photos/matvey-japan.jpg",
-            "caption": "Тренировка по Кэндо",
-            "filter": "brightness(1.06) contrast(1.03) saturate(0.92)"
+            "filter": "brightness(1.06) contrast(1.03) saturate(0.92)",
+            "caption": "Тренировка по Кэндо"
           },
           {
             "src": "assets/photos/matvey-cafe.jpg",
-            "caption": "Фото из кафе",
-            "filter": "brightness(0.96) contrast(1.02) saturate(0.92)"
+            "filter": "brightness(0.96) contrast(1.02) saturate(0.92)",
+            "caption": "Фото из кафе"
           },
           {
             "src": "assets/photos/matvey-mountains.jpg",
-            "caption": "Подъём на 1 500м в гору",
             "position": "center 26%",
-            "filter": "brightness(0.88) contrast(1.03) saturate(0.92)"
+            "filter": "brightness(0.88) contrast(1.03) saturate(0.92)",
+            "caption": "Подъём на 1 500м в гору"
           },
           {
             "src": "assets/photos/matvey-lake.jpg",
-            "caption": "Японский сад",
-            "filter": "brightness(0.9) contrast(1.02) saturate(0.9)"
+            "filter": "brightness(0.9) contrast(1.02) saturate(0.9)",
+            "caption": "Японский сад"
           },
           {
             "src": "assets/photos/matvey-travel.jpg",
-            "caption": "Атмосфера Каппадокии (Турция)",
-            "filter": "brightness(1.01) contrast(1.03) saturate(0.9)"
+            "filter": "brightness(1.01) contrast(1.03) saturate(0.9)",
+            "caption": "Атмосфера Каппадокии (Турция)"
           }
         ]
       },
