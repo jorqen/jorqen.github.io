@@ -638,7 +638,7 @@ def add_hyperlink(paragraph: Any, text: str, url: str, color_hex: str, bold: boo
     color = OxmlElement("w:color")
     color.set(qn("w:val"), color_hex)
     underline = OxmlElement("w:u")
-    underline.set(qn("w:val"), "single")
+    underline.set(qn("w:val"), "none")
     properties.append(fonts)
     properties.append(color)
     properties.append(underline)
@@ -754,7 +754,7 @@ def configure_docx(document: Document, download_style: dict[str, Any]) -> None:
         rgb_color(style_colors["text"]),
         bold=True,
         line_spacing=typography["title"]["lineHeight"],
-        space_after=2,
+        space_after=2.5,
     )
     configure_docx_paragraph_style(
         styles,
@@ -764,7 +764,7 @@ def configure_docx(document: Document, download_style: dict[str, Any]) -> None:
         rgb_color(style_colors["text"]),
         bold=True,
         line_spacing=typography["headline"]["lineHeight"],
-        space_after=3,
+        space_after=4,
     )
     configure_docx_paragraph_style(
         styles,
@@ -773,7 +773,7 @@ def configure_docx(document: Document, download_style: dict[str, Any]) -> None:
         typography["contact"]["fontSize"],
         rgb_color(style_colors["muted"]),
         line_spacing=typography["contact"]["lineHeight"],
-        space_after=3,
+        space_after=3.5,
     )
     configure_docx_paragraph_style(
         styles,
@@ -812,8 +812,8 @@ def configure_docx(document: Document, download_style: dict[str, Any]) -> None:
         rgb_color(style_colors["accent"]),
         bold=True,
         line_spacing=typography["section"]["lineHeight"],
-        space_before=8,
-        space_after=2,
+        space_before=9,
+        space_after=3,
     )
     configure_docx_paragraph_style(
         styles,
@@ -832,7 +832,7 @@ def configure_docx(document: Document, download_style: dict[str, Any]) -> None:
         rgb_color(style_colors["text"]),
         bold=True,
         line_spacing=typography["company"]["lineHeight"],
-        space_after=2,
+        space_after=2.5,
     )
     configure_docx_paragraph_style(
         styles,
@@ -841,7 +841,7 @@ def configure_docx(document: Document, download_style: dict[str, Any]) -> None:
         typography["meta"]["fontSize"],
         rgb_color(style_colors["muted"]),
         line_spacing=typography["meta"]["lineHeight"],
-        space_after=1,
+        space_after=4,
     )
     configure_docx_paragraph_style(
         styles,
@@ -850,7 +850,7 @@ def configure_docx(document: Document, download_style: dict[str, Any]) -> None:
         typography["body"]["fontSize"],
         rgb_color(style_colors["text"]),
         line_spacing=typography["body"]["lineHeight"],
-        space_after=2,
+        space_after=2.75,
     )
     configure_docx_paragraph_style(
         styles,
@@ -858,8 +858,8 @@ def configure_docx(document: Document, download_style: dict[str, Any]) -> None:
         font_name,
         typography["bullet"]["fontSize"],
         rgb_color(style_colors["text"]),
-        line_spacing=typography["bullet"]["lineHeight"],
-        space_after=1,
+        line_spacing=typography["bullet"]["lineHeight"] + 0.35,
+        space_after=1.75,
         left_indent=0.17,
         first_line_indent=-0.11,
     )
