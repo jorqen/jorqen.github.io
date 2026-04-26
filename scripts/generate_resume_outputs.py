@@ -28,6 +28,7 @@ except ImportError as exc:  # pragma: no cover - handled at runtime for local se
 try:
     from docx import Document
     from docx.enum.style import WD_STYLE_TYPE
+    from docx.enum.text import WD_LINE_SPACING
     from docx.oxml import OxmlElement
     from docx.oxml.ns import qn
     from docx.shared import Inches, Mm, Pt, RGBColor
@@ -86,6 +87,18 @@ DOWNLOAD_STYLES = {
         "cardBody": {"fontSize": 8.4, "lineHeight": 10.6},
     },
 }
+
+DOWNLOAD_DOCX_PAGE_MARGINS = {
+    "horizontal": 0.50,
+    "vertical": 0.45,
+}
+
+DOWNLOAD_PDF_PAGE_MARGINS = {
+    "horizontal": 0.42,
+    "vertical": 0.37,
+}
+
+PDF_TYPOGRAPHY_SCALE = 0.9
 
 SITE_UI = {
     "metaDescription": {
@@ -160,11 +173,13 @@ SITE_UI = {
 
 DOWNLOAD_SECTION_TITLES = {
     "en": {
+        "profile": "ABOUT ME",
         "experience": "PROFESSIONAL EXPERIENCE",
         "education": "EDUCATION",
         "skills": "PROGRAMMING SKILLS",
     },
     "ru": {
+        "profile": "ОБО МНЕ",
         "experience": "ПРОФЕССИОНАЛЬНЫЙ ОПЫТ",
         "education": "ОБРАЗОВАНИЕ",
         "skills": "ТЕХНИЧЕСКИЕ НАВЫКИ",
@@ -566,6 +581,11 @@ def generate_txt(data: dict[str, Any], lang: str, output_path: Path) -> None:
     add_wrapped(lines, content["hero"]["role"])
 
     add_wrapped(lines)
+    lines.append(download_section_title(lang, "profile"))
+    lines.append("-" * len(download_section_title(lang, "profile")))
+    add_wrapped(lines, content["hero"]["summary"], 100)
+
+    add_wrapped(lines)
     lines.append(download_section_title(lang, "experience"))
     lines.append("-" * len(download_section_title(lang, "experience")))
     for item in content["experience"]["items"]:
@@ -612,10 +632,14 @@ def add_hyperlink(paragraph: Any, text: str, url: str, color_hex: str, bold: boo
 
     run = OxmlElement("w:r")
     properties = OxmlElement("w:rPr")
+    fonts = OxmlElement("w:rFonts")
+    for attribute in ("ascii", "hAnsi", "eastAsia", "cs"):
+        fonts.set(qn(f"w:{attribute}"), "Arial")
     color = OxmlElement("w:color")
     color.set(qn("w:val"), color_hex)
     underline = OxmlElement("w:u")
     underline.set(qn("w:val"), "single")
+    properties.append(fonts)
     properties.append(color)
     properties.append(underline)
     if bold:
@@ -633,6 +657,25 @@ def docx_paragraph_style(styles: Any, name: str) -> Any:
         return styles[name]
     except KeyError:
         return styles.add_style(name, WD_STYLE_TYPE.PARAGRAPH)
+
+
+def set_docx_style_font_family(style: Any, font_name: str) -> None:
+    properties = style._element.get_or_add_rPr()  # noqa: SLF001
+    fonts = properties.rFonts
+    if fonts is None:
+        fonts = OxmlElement("w:rFonts")
+        properties.append(fonts)
+    for attribute in ("ascii", "hAnsi", "eastAsia", "cs"):
+        fonts.set(qn(f"w:{attribute}"), font_name)
+
+
+def set_docx_style_widow_control(style: Any, enabled: bool = False) -> None:
+    paragraph_properties = style._element.get_or_add_pPr()  # noqa: SLF001
+    widow_control = paragraph_properties.find(qn("w:widowControl"))
+    if widow_control is None:
+        widow_control = OxmlElement("w:widowControl")
+        paragraph_properties.append(widow_control)
+    widow_control.set(qn("w:val"), "1" if enabled else "0")
 
 
 def configure_docx_paragraph_style(
@@ -653,6 +696,7 @@ def configure_docx_paragraph_style(
 ) -> None:
     style = docx_paragraph_style(styles, name)
     style.font.name = font_name
+    set_docx_style_font_family(style, font_name)
     style.font.size = Pt(font_size)
     style.font.bold = bold
     style.font.color.rgb = color
@@ -661,6 +705,8 @@ def configure_docx_paragraph_style(
     style.paragraph_format.space_before = Pt(space_before)
     style.paragraph_format.space_after = Pt(space_after)
     style.paragraph_format.line_spacing = Pt(line_spacing)
+    style.paragraph_format.line_spacing_rule = WD_LINE_SPACING.EXACTLY
+    set_docx_style_widow_control(style, enabled=False)
     if left_indent is not None:
         style.paragraph_format.left_indent = Inches(left_indent)
     if first_line_indent is not None:
@@ -673,20 +719,22 @@ def configure_docx(document: Document, download_style: dict[str, Any]) -> None:
     section = document.sections[0]
     section.page_width = Mm(210)
     section.page_height = Mm(297)
-    section.top_margin = Inches(0.48)
-    section.bottom_margin = Inches(0.48)
-    section.left_margin = Inches(0.56)
-    section.right_margin = Inches(0.56)
+    section.top_margin = Inches(DOWNLOAD_DOCX_PAGE_MARGINS["vertical"])
+    section.bottom_margin = Inches(DOWNLOAD_DOCX_PAGE_MARGINS["vertical"])
+    section.left_margin = Inches(DOWNLOAD_DOCX_PAGE_MARGINS["horizontal"])
+    section.right_margin = Inches(DOWNLOAD_DOCX_PAGE_MARGINS["horizontal"])
 
     font_name = "Arial"
     styles = document.styles
     normal = styles["Normal"]
     normal.font.name = font_name
-    normal._element.rPr.rFonts.set(qn("w:eastAsia"), font_name)  # noqa: SLF001
+    set_docx_style_font_family(normal, font_name)
     normal.font.size = Pt(9.2)
     normal.font.color.rgb = rgb_color(style_colors["text"])
     normal.paragraph_format.space_after = Pt(0)
     normal.paragraph_format.line_spacing = Pt(11.8)
+    normal.paragraph_format.line_spacing_rule = WD_LINE_SPACING.EXACTLY
+    set_docx_style_widow_control(normal, enabled=False)
 
     configure_docx_paragraph_style(
         styles,
@@ -705,7 +753,6 @@ def configure_docx(document: Document, download_style: dict[str, Any]) -> None:
         typography["title"]["fontSize"],
         rgb_color(style_colors["text"]),
         bold=True,
-        keep_with_next=True,
         line_spacing=typography["title"]["lineHeight"],
         space_after=2,
     )
@@ -716,7 +763,6 @@ def configure_docx(document: Document, download_style: dict[str, Any]) -> None:
         typography["headline"]["fontSize"],
         rgb_color(style_colors["text"]),
         bold=True,
-        keep_with_next=True,
         line_spacing=typography["headline"]["lineHeight"],
         space_after=3,
     )
@@ -765,7 +811,6 @@ def configure_docx(document: Document, download_style: dict[str, Any]) -> None:
         typography["section"]["fontSize"],
         rgb_color(style_colors["accent"]),
         bold=True,
-        keep_with_next=True,
         line_spacing=typography["section"]["lineHeight"],
         space_before=8,
         space_after=2,
@@ -786,7 +831,6 @@ def configure_docx(document: Document, download_style: dict[str, Any]) -> None:
         typography["company"]["fontSize"],
         rgb_color(style_colors["text"]),
         bold=True,
-        keep_with_next=True,
         line_spacing=typography["company"]["lineHeight"],
         space_after=2,
     )
@@ -826,7 +870,6 @@ def configure_docx(document: Document, download_style: dict[str, Any]) -> None:
         typography["cardTitle"]["fontSize"],
         rgb_color(style_colors["text"]),
         bold=True,
-        keep_with_next=True,
         line_spacing=typography["cardTitle"]["lineHeight"],
         space_after=2,
     )
@@ -884,6 +927,9 @@ def generate_docx(data: dict[str, Any], lang: str, output_path: Path, build_dir:
     contact_paragraph = document.add_paragraph(style="ResumeContact")
     docx_contact_line(contact_paragraph, data, lang, style_colors["accent"], build_dir)
     document.add_paragraph(content["hero"]["role"], style="ResumeHeadline")
+
+    document.add_paragraph(download_section_title(lang, "profile"), style="ResumeSection")
+    document.add_paragraph(content["hero"]["summary"], style="ResumeBody")
 
     document.add_paragraph(download_section_title(lang, "experience"), style="ResumeSection")
     for item in content["experience"]["items"]:
@@ -1022,13 +1068,20 @@ def build_pdf_styles(lang: str, download_style: dict[str, Any]) -> dict[str, Par
     typography = download_style["typography"]
     regular, bold = register_pdf_fonts(lang)
     base = getSampleStyleSheet()
+
+    def font_size(style_key: str) -> float:
+        return typography[style_key]["fontSize"] * PDF_TYPOGRAPHY_SCALE
+
+    def line_height(style_key: str) -> float:
+        return typography[style_key]["lineHeight"] * PDF_TYPOGRAPHY_SCALE
+
     return {
         "kicker": ParagraphStyle(
             "ResumeKicker",
             parent=base["BodyText"],
             fontName=bold,
-            fontSize=typography["kicker"]["fontSize"],
-            leading=typography["kicker"]["lineHeight"],
+            fontSize=font_size("kicker"),
+            leading=line_height("kicker"),
             textColor=colors.HexColor(f"#{style_colors['accent']}"),
             spaceAfter=2,
         ),
@@ -1036,8 +1089,8 @@ def build_pdf_styles(lang: str, download_style: dict[str, Any]) -> dict[str, Par
             "ResumeTitle",
             parent=base["Heading1"],
             fontName=bold,
-            fontSize=typography["title"]["fontSize"],
-            leading=typography["title"]["lineHeight"],
+            fontSize=font_size("title"),
+            leading=line_height("title"),
             textColor=colors.HexColor(f"#{style_colors['text']}"),
             spaceAfter=2,
         ),
@@ -1045,8 +1098,8 @@ def build_pdf_styles(lang: str, download_style: dict[str, Any]) -> dict[str, Par
             "ResumeHeadline",
             parent=base["BodyText"],
             fontName=bold,
-            fontSize=typography["headline"]["fontSize"],
-            leading=typography["headline"]["lineHeight"],
+            fontSize=font_size("headline"),
+            leading=line_height("headline"),
             textColor=colors.HexColor(f"#{style_colors['text']}"),
             spaceAfter=3,
         ),
@@ -1054,8 +1107,8 @@ def build_pdf_styles(lang: str, download_style: dict[str, Any]) -> dict[str, Par
             "ResumeContact",
             parent=base["BodyText"],
             fontName=regular,
-            fontSize=typography["contact"]["fontSize"],
-            leading=typography["contact"]["lineHeight"],
+            fontSize=font_size("contact"),
+            leading=line_height("contact"),
             textColor=colors.HexColor(f"#{style_colors['muted']}"),
             spaceAfter=3,
         ),
@@ -1063,8 +1116,8 @@ def build_pdf_styles(lang: str, download_style: dict[str, Any]) -> dict[str, Par
             "ResumeSummary",
             parent=base["BodyText"],
             fontName=regular,
-            fontSize=typography["summary"]["fontSize"],
-            leading=typography["summary"]["lineHeight"],
+            fontSize=font_size("summary"),
+            leading=line_height("summary"),
             textColor=colors.HexColor(f"#{style_colors['text']}"),
             spaceAfter=0,
         ),
@@ -1072,8 +1125,8 @@ def build_pdf_styles(lang: str, download_style: dict[str, Any]) -> dict[str, Par
             "ResumeFactLabel",
             parent=base["BodyText"],
             fontName=bold,
-            fontSize=typography["factLabel"]["fontSize"],
-            leading=typography["factLabel"]["lineHeight"],
+            fontSize=font_size("factLabel"),
+            leading=line_height("factLabel"),
             textColor=colors.HexColor(f"#{style_colors['muted']}"),
             spaceAfter=1,
         ),
@@ -1081,8 +1134,8 @@ def build_pdf_styles(lang: str, download_style: dict[str, Any]) -> dict[str, Par
             "ResumeFactValue",
             parent=base["BodyText"],
             fontName=bold,
-            fontSize=typography["factValue"]["fontSize"],
-            leading=typography["factValue"]["lineHeight"],
+            fontSize=font_size("factValue"),
+            leading=line_height("factValue"),
             textColor=colors.HexColor(f"#{style_colors['text']}"),
             spaceAfter=0,
         ),
@@ -1090,8 +1143,8 @@ def build_pdf_styles(lang: str, download_style: dict[str, Any]) -> dict[str, Par
             "ResumeSection",
             parent=base["Heading2"],
             fontName=bold,
-            fontSize=typography["section"]["fontSize"],
-            leading=typography["section"]["lineHeight"],
+            fontSize=font_size("section"),
+            leading=line_height("section"),
             textColor=colors.HexColor(f"#{style_colors['accent']}"),
             spaceBefore=8,
             spaceAfter=2,
@@ -1100,8 +1153,8 @@ def build_pdf_styles(lang: str, download_style: dict[str, Any]) -> dict[str, Par
             "ResumeSectionBody",
             parent=base["BodyText"],
             fontName=regular,
-            fontSize=typography["sectionBody"]["fontSize"],
-            leading=typography["sectionBody"]["lineHeight"],
+            fontSize=font_size("sectionBody"),
+            leading=line_height("sectionBody"),
             textColor=colors.HexColor(f"#{style_colors['muted']}"),
             spaceAfter=4,
         ),
@@ -1109,8 +1162,8 @@ def build_pdf_styles(lang: str, download_style: dict[str, Any]) -> dict[str, Par
             "ResumeCompany",
             parent=base["Heading3"],
             fontName=bold,
-            fontSize=typography["company"]["fontSize"],
-            leading=typography["company"]["lineHeight"],
+            fontSize=font_size("company"),
+            leading=line_height("company"),
             textColor=colors.HexColor(f"#{style_colors['text']}"),
             spaceAfter=2,
         ),
@@ -1118,8 +1171,8 @@ def build_pdf_styles(lang: str, download_style: dict[str, Any]) -> dict[str, Par
             "ResumeMeta",
             parent=base["BodyText"],
             fontName=regular,
-            fontSize=typography["meta"]["fontSize"],
-            leading=typography["meta"]["lineHeight"],
+            fontSize=font_size("meta"),
+            leading=line_height("meta"),
             textColor=colors.HexColor(f"#{style_colors['muted']}"),
             spaceAfter=1,
         ),
@@ -1127,8 +1180,8 @@ def build_pdf_styles(lang: str, download_style: dict[str, Any]) -> dict[str, Par
             "ResumeBody",
             parent=base["BodyText"],
             fontName=regular,
-            fontSize=typography["body"]["fontSize"],
-            leading=typography["body"]["lineHeight"],
+            fontSize=font_size("body"),
+            leading=line_height("body"),
             textColor=colors.HexColor(f"#{style_colors['text']}"),
             spaceAfter=2,
         ),
@@ -1136,8 +1189,8 @@ def build_pdf_styles(lang: str, download_style: dict[str, Any]) -> dict[str, Par
             "ResumeBullet",
             parent=base["BodyText"],
             fontName=regular,
-            fontSize=typography["bullet"]["fontSize"],
-            leading=typography["bullet"]["lineHeight"],
+            fontSize=font_size("bullet"),
+            leading=line_height("bullet"),
             leftIndent=12,
             firstLineIndent=-8,
             textColor=colors.HexColor(f"#{style_colors['text']}"),
@@ -1147,8 +1200,8 @@ def build_pdf_styles(lang: str, download_style: dict[str, Any]) -> dict[str, Par
             "ResumeCardTitle",
             parent=base["BodyText"],
             fontName=bold,
-            fontSize=typography["cardTitle"]["fontSize"],
-            leading=typography["cardTitle"]["lineHeight"],
+            fontSize=font_size("cardTitle"),
+            leading=line_height("cardTitle"),
             textColor=colors.HexColor(f"#{style_colors['text']}"),
             spaceAfter=2,
         ),
@@ -1156,8 +1209,8 @@ def build_pdf_styles(lang: str, download_style: dict[str, Any]) -> dict[str, Par
             "ResumeCardBody",
             parent=base["BodyText"],
             fontName=regular,
-            fontSize=typography["cardBody"]["fontSize"],
-            leading=typography["cardBody"]["lineHeight"],
+            fontSize=font_size("cardBody"),
+            leading=line_height("cardBody"),
             textColor=colors.HexColor(f"#{style_colors['text']}"),
             spaceAfter=0,
         ),
@@ -1196,10 +1249,10 @@ def generate_pdf(data: dict[str, Any], lang: str, output_path: Path, build_dir: 
     doc = SimpleDocTemplate(
         str(output_path),
         pagesize=A4,
-        rightMargin=0.56 * inch,
-        leftMargin=0.56 * inch,
-        topMargin=0.48 * inch,
-        bottomMargin=0.48 * inch,
+        rightMargin=DOWNLOAD_PDF_PAGE_MARGINS["horizontal"] * inch,
+        leftMargin=DOWNLOAD_PDF_PAGE_MARGINS["horizontal"] * inch,
+        topMargin=DOWNLOAD_PDF_PAGE_MARGINS["vertical"] * inch,
+        bottomMargin=DOWNLOAD_PDF_PAGE_MARGINS["vertical"] * inch,
         title=content["meta"]["title"],
         author=content["hero"]["name"],
     )
@@ -1207,6 +1260,9 @@ def generate_pdf(data: dict[str, Any], lang: str, output_path: Path, build_dir: 
     story.append(pdf_paragraph(content["hero"]["name"], styles["title"]))
     story.append(pdf_markup(pdf_contact_markup(data, lang, style_colors["accent"], build_dir), styles["contact"]))
     story.append(pdf_paragraph(content["hero"]["role"], styles["headline"]))
+
+    pdf_section(story, download_section_title(lang, "profile"), styles)
+    story.append(pdf_paragraph(content["hero"]["summary"], styles["body"]))
 
     pdf_section(story, download_section_title(lang, "experience"), styles)
     for item in content["experience"]["items"]:
